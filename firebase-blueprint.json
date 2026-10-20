@@ -1,0 +1,314 @@
+{
+  "entities": {
+    "Course": {
+      "title": "Course",
+      "description": "IT and software engineering training program",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "shortDescription": { "type": "string", "maxLength": 500 },
+        "fullDescription": { "type": "string", "maxLength": 5000 },
+        "thumbnail": { "type": "string", "maxLength": 1000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "technologies": { "type": "array" },
+        "skillLevel": { "type": "string", "maxLength": 50 },
+        "duration": { "type": "string", "maxLength": 50 },
+        "syllabus": { "type": "array" },
+        "learningOutcomes": { "type": "array" },
+        "featured": { "type": "boolean" },
+        "published": { "type": "boolean" },
+        "displayOrder": { "type": "number" },
+        "seoTitle": { "type": "string", "maxLength": 150 },
+        "seoDescription": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "slug", "category", "published"]
+    },
+    "CourseCategory": {
+      "title": "CourseCategory",
+      "description": "Domain category for courses",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 80 },
+        "slug": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "maxLength": 300 },
+        "icon": { "type": "string", "maxLength": 50 },
+        "displayOrder": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "slug", "active"]
+    },
+    "HeroSlide": {
+      "title": "HeroSlide",
+      "description": "Homepage carousel slide managed by admin",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "highlightText": { "type": "string", "maxLength": 100 },
+        "subtitle": { "type": "string", "maxLength": 500 },
+        "ctaText": { "type": "string", "maxLength": 60 },
+        "ctaLink": { "type": "string", "maxLength": 300 },
+        "secondaryCtaText": { "type": "string", "maxLength": 60 },
+        "secondaryCtaLink": { "type": "string", "maxLength": 300 },
+        "image": { "type": "string", "maxLength": 1000 },
+        "displayOrder": { "type": "number" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "published", "displayOrder"]
+    },
+    "WhyChooseUs": {
+      "title": "WhyChooseUs",
+      "description": "Value proposition and institutional benefit points",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 500 },
+        "stepNumber": { "type": "string", "maxLength": 10 },
+        "icon": { "type": "string", "maxLength": 50 },
+        "displayOrder": { "type": "number" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "description", "published"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "Enterprise software and IT engineering service",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "shortDescription": { "type": "string", "maxLength": 500 },
+        "fullDescription": { "type": "string", "maxLength": 4000 },
+        "icon": { "type": "string", "maxLength": 50 },
+        "features": { "type": "array" },
+        "displayOrder": { "type": "number" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "slug", "published"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Student incubator or client technology project",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "maxLength": 500 },
+        "fullCaseStudy": { "type": "string", "maxLength": 4000 },
+        "image": { "type": "string", "maxLength": 1000 },
+        "technologies": { "type": "array" },
+        "statusBadge": { "type": "string", "maxLength": 50 },
+        "externalUrl": { "type": "string", "maxLength": 500 },
+        "githubUrl": { "type": "string", "maxLength": 500 },
+        "featured": { "type": "boolean" },
+        "published": { "type": "boolean" },
+        "displayOrder": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "slug", "category", "published"]
+    },
+    "TeamMember": {
+      "title": "TeamMember",
+      "description": "Faculty mentor, executive leadership or managing director",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 100 },
+        "title": { "type": "string", "maxLength": 100 },
+        "bio": { "type": "string", "maxLength": 1000 },
+        "photoUrl": { "type": "string", "maxLength": 1000 },
+        "order": { "type": "number" },
+        "published": { "type": "boolean" },
+        "linkedinUrl": { "type": "string", "maxLength": 300 },
+        "githubUrl": { "type": "string", "maxLength": 300 },
+        "email": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "role", "published"]
+    },
+    "Resource": {
+      "title": "Resource",
+      "description": "Free study notes, lab guide or project starter code",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 80 },
+        "type": { "type": "string", "maxLength": 40 },
+        "description": { "type": "string", "maxLength": 500 },
+        "downloadUrl": { "type": "string", "maxLength": 1000 },
+        "fileFormat": { "type": "string", "maxLength": 20 },
+        "fileSize": { "type": "string", "maxLength": 30 },
+        "published": { "type": "boolean" },
+        "displayOrder": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "type", "published"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "Educational tech article, tutorial or announcement",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "slug": { "type": "string", "maxLength": 150 },
+        "excerpt": { "type": "string", "maxLength": 500 },
+        "content": { "type": "string", "maxLength": 20000 },
+        "coverImage": { "type": "string", "maxLength": 1000 },
+        "author": { "type": "string", "maxLength": 100 },
+        "tags": { "type": "array" },
+        "published": { "type": "boolean" },
+        "publishedAt": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "slug", "content", "published"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global website configuration, contact channels, and links",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string", "maxLength": 100 },
+        "tagline": { "type": "string", "maxLength": 150 },
+        "contactEmail": { "type": "string", "maxLength": 150 },
+        "contactPhone": { "type": "string", "maxLength": 40 },
+        "whatsappNumber": { "type": "string", "maxLength": 40 },
+        "address": { "type": "string", "maxLength": 300 },
+        "socialLinks": { "type": "object" },
+        "stats": { "type": "object" },
+        "footerLinks": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["companyName", "contactEmail"]
+    },
+    "Enquiry": {
+      "title": "Enquiry",
+      "description": "Student course enquiry or client business request",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "programOrService": { "type": "string", "maxLength": 120 },
+        "subject": { "type": "string", "maxLength": 150 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "maxLength": 40 },
+        "assignedTo": { "type": "string", "maxLength": 100 },
+        "internalNotes": { "type": "string", "maxLength": 3000 },
+        "followUpDate": { "type": "string", "maxLength": 50 },
+        "emailNotificationSent": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["fullName", "email", "phone", "programOrService", "message"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Registered administrative or staff member profile",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 150 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 40 },
+        "photoURL": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Trusted admin whitelist record for zero-delay rule evaluation",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail log of admin actions",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 150 },
+        "action": { "type": "string", "maxLength": 100 },
+        "details": { "type": "string", "maxLength": 1000 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["action", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Course catalog"
+    },
+    "/courseCategories/{categoryId}": {
+      "schema": "CourseCategory",
+      "description": "Domain categories"
+    },
+    "/heroSlides/{slideId}": {
+      "schema": "HeroSlide",
+      "description": "Hero carousel slides"
+    },
+    "/whyChooseUs/{benefitId}": {
+      "schema": "WhyChooseUs",
+      "description": "Why choose Navioraa benefit cards"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "Enterprise engineering services"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Student incubator and client projects"
+    },
+    "/teamMembers/{memberId}": {
+      "schema": "TeamMember",
+      "description": "Leadership and faculty members"
+    },
+    "/resources/{resourceId}": {
+      "schema": "Resource",
+      "description": "Study notes, guides and downloads"
+    },
+    "/blogPosts/{postId}": {
+      "schema": "BlogPost",
+      "description": "Educational blog posts and guides"
+    },
+    "/siteSettings/{settingId}": {
+      "schema": "SiteSettings",
+      "description": "Global website settings"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "Enquiry",
+      "description": "Student enquiries and contact submissions"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Admin access list"
+    },
+    "/activityLogs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Administrative audit trail"
+    }
+  }
+}

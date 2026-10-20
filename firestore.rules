@@ -1,0 +1,145 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security Primitives
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email == 'naviora.pvt@gmail.com' && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidEnquiry(data) {
+      return data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 120 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 150 &&
+             data.phone is string && data.phone.size() > 0 && data.phone.size() <= 40 &&
+             data.programOrService is string && data.programOrService.size() <= 120 &&
+             data.message is string && data.message.size() <= 2000;
+    }
+
+    function isValidCourse(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 150 &&
+             data.slug is string && data.slug.size() > 0 && data.slug.size() <= 100 &&
+             data.published is bool;
+    }
+
+    // Courses Catalog
+    match /courses/{courseId} {
+      allow get: if isValidId(courseId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create: if isValidId(courseId) && isAdmin() && isValidCourse(incoming());
+      allow update: if isValidId(courseId) && isAdmin() && isValidCourse(incoming());
+      allow delete: if isValidId(courseId) && isAdmin();
+    }
+
+    // Course Categories
+    match /courseCategories/{categoryId} {
+      allow get: if isValidId(categoryId) && ((resource != null && resource.data.active == true) || isAdmin());
+      allow list: if resource.data.active == true || isAdmin();
+      allow create, update, delete: if isValidId(categoryId) && isAdmin();
+    }
+
+    // Hero Slides
+    match /heroSlides/{slideId} {
+      allow get: if isValidId(slideId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(slideId) && isAdmin();
+    }
+
+    // Why Choose Navioraa
+    match /whyChooseUs/{benefitId} {
+      allow get: if isValidId(benefitId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(benefitId) && isAdmin();
+    }
+
+    // Enterprise Services
+    match /services/{serviceId} {
+      allow get: if isValidId(serviceId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(serviceId) && isAdmin();
+    }
+
+    // Projects (Student Incubator & Client)
+    match /projects/{projectId} {
+      allow get: if isValidId(projectId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(projectId) && isAdmin();
+    }
+
+    // Team Members & Leadership
+    match /teamMembers/{memberId} {
+      allow get: if isValidId(memberId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(memberId) && isAdmin();
+    }
+
+    // Student Learning Resources
+    match /resources/{resourceId} {
+      allow get: if isValidId(resourceId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(resourceId) && isAdmin();
+    }
+
+    // Blog Posts & Articles
+    match /blogPosts/{postId} {
+      allow get: if isValidId(postId) && ((resource != null && resource.data.published == true) || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isValidId(postId) && isAdmin();
+    }
+
+    // Site Settings (Public info like company address, email, phone)
+    match /siteSettings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if true;
+      allow create, update, delete: if isValidId(settingId) && isAdmin();
+    }
+
+    // Enquiries (Public can create with validation; only admin can read and manage)
+    match /enquiries/{enquiryId} {
+      allow create: if isValidId(enquiryId) && isValidEnquiry(incoming());
+      allow get, list, update, delete: if isAdmin();
+    }
+
+    // Admins List
+    match /admins/{adminId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isAdmin() && isValidId(adminId);
+    }
+
+    // Users
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create, update: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // Activity Logs
+    match /activityLogs/{logId} {
+      allow get, list, create: if isValidId(logId) && isAdmin();
+      allow update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+<title>NAVIORAA - Institute of Technology &amp; R&amp;D</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0B3B82",
+            "primary-dark": "#072658",
+            "primary-light": "#EBF2FF",
+            "secondary": "#DA271F",
+            "secondary-soft": "#FEE2E2",
+            "accent-blue": "#0284C7",
+            "surface": "#FFFFFF",
+            "surface-subtle": "#F8FAFC",
+            "surface-muted": "#F1F5F9",
+            "border-subtle": "#E2E8F0",
+            "border-medium": "#CBD5E1",
+            "on-surface": "#0F172A",
+            "on-surface-variant": "#475569",
+            "text-muted": "#64748B"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            heading: ["Plus Jakarta Sans", "Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background-color: #FFFFFF;
+        color: #0F172A;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-surface font-sans text-on-surface flex flex-col min-h-screen selection:bg-primary-light selection:text-primary">
+<!-- ==================== 1. STICKY INSTITUTION HEADER ==================== -->
+<header class="fixed top-0 w-full z-50 pt-safe bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+<div class="h-16 px-4 flex items-center justify-between gap-3">
+<!-- Hamburger + Institute Logo -->
+<div class="flex items-center gap-2 min-w-0">
+<button aria-label="Open Navigation Menu" class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-subtle active:scale-95 transition-all flex-shrink-0" onclick="document.getElementById('mobile-drawer').classList.remove('-translate-x-full');document.getElementById('drawer-backdrop').classList.remove('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<a class="flex items-center gap-2 min-w-0" href="#">
+<img alt="NAVIORAA Logo" class="h-9 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1WvXapdEnMeltY8iU9JwLdNKOOhH7ol8heGxaeDchiHMIQiUDUyAuHcuck53FXh1wQZvsQ_KMJHLuP9j-hYcpx4NjKm43K4yXHYRfZ7Hr7jgG_Sf4z888BGGW993BnVKCLGDXqlrJ748xu2l9Ip1YsAWTfk7IkPQJVfnkCMNvZzGqwTVaSacqoNkCcMFJ0cXECpzLvUGq0ESurWQ7xF9ukcpKDb0t1mtDoh8wHgUzc3mCIbW9z4y2U_RVO8"/>
+<div class="flex flex-col min-w-0">
+<span class="font-heading font-extrabold text-[17px] text-primary tracking-tight leading-none">NAVIORAA</span>
+<span class="text-[10px] uppercase font-bold text-secondary tracking-wider mt-0.5 leading-none">IT Institute &amp; Tech Labs</span>
+</div>
+</a>
+</div>
+<!-- Quick CTA Button -->
+<div class="flex items-center gap-2 flex-shrink-0">
+<a class="h-9 px-4 bg-primary hover:bg-primary-dark text-white rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+<span>Enquire Now</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</header>
+<!-- ==================== SIDE NAVIGATION DRAWER ==================== -->
+<div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300" id="drawer-backdrop" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');this.classList.add('opacity-0','pointer-events-none');"></div>
+<aside class="fixed top-0 left-0 bottom-0 w-[84%] max-w-[320px] bg-white z-50 shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out pt-safe pb-safe" id="mobile-drawer">
+<div class="h-16 px-4 flex items-center justify-between border-b border-border-subtle bg-surface-subtle">
+<div class="flex items-center gap-2">
+<img alt="NAVIORAA Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WvXapdEnMeltY8iU9JwLdNKOOhH7ol8heGxaeDchiHMIQiUDUyAuHcuck53FXh1wQZvsQ_KMJHLuP9j-hYcpx4NjKm43K4yXHYRfZ7Hr7jgG_Sf4z888BGGW993BnVKCLGDXqlrJ748xu2l9Ip1YsAWTfk7IkPQJVfnkCMNvZzGqwTVaSacqoNkCcMFJ0cXECpzLvUGq0ESurWQ7xF9ukcpKDb0t1mtDoh8wHgUzc3mCIbW9z4y2U_RVO8"/>
+<span class="font-heading font-extrabold text-primary text-base tracking-tight">NAVIORAA</span>
+</div>
+<button aria-label="Close Drawer" class="w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-200" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[22px]">close</span>
+</button>
+</div>
+<div class="p-4 border-b border-border-subtle bg-white">
+<a class="w-full h-11 bg-primary text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-sm" href="#courses-catalog" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[18px]">school</span>
+<span>Explore All Courses</span>
+</a>
+</div>
+<nav class="flex-1 overflow-y-auto p-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-light text-primary font-semibold text-sm" href="#" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#courses-catalog" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span>Courses</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#why-navioraa" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+<span>Why Navioraa</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#services" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">integration_instructions</span>
+<span>Enterprise Services</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#projects" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+<span>Student Projects</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#mentors" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<span>Faculty &amp; Leads</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#resources" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">folder_data</span>
+<span>Free Study Notes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-subtle font-medium text-sm" href="#enquiry-form" onclick="document.getElementById('mobile-drawer').classList.add('-translate-x-full');document.getElementById('drawer-backdrop').classList.add('opacity-0','pointer-events-none');">
+<span class="material-symbols-outlined text-[20px]">support_agent</span>
+<span>Contact &amp; Enquiry</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-subtle bg-surface-subtle">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">IT</div>
+<div class="min-w-0">
+<p class="text-xs font-bold text-on-surface truncate">NAVIORAA Institute</p>
+<p class="text-[11px] text-text-muted truncate">Excellence in Tech Pedagogy</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+<main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-white">
+<!-- ==================== 2. CLEAN HERO SECTION (DISHA GROUP INSPIRED) ==================== -->
+<section class="bg-gradient-to-b from-primary-light/40 via-white to-surface px-4 pt-6 pb-8 border-b border-border-subtle">
+<div class="max-w-2xl mx-auto flex flex-col items-center text-center">
+<!-- Disha-style eyebrow badge with red & blue accent -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-border-medium/60 shadow-sm mb-4">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-[12px] font-bold text-primary tracking-wide uppercase">Learn. Build. Create. Grow.</span>
+</div>
+<!-- Dynamic Carousel Headline & Subtitle -->
+<div class="min-h-[120px] flex flex-col justify-center transition-all duration-300" id="hero-carousel-text">
+<h1 class="font-heading font-extrabold text-[28px] leading-[34px] tracking-tight text-on-surface" id="slide-title">
+            Master In-Demand Tech Skills. <span class="text-primary">Build Your Future.</span>
+</h1>
+<p class="text-sm text-on-surface-variant mt-2 max-w-lg leading-relaxed" id="slide-sub">
+            Discover practical IT training, master modern technologies, and build production-grade portfolios with Navioraa.
+          </p>
+</div>
+<!-- Clean CTAs -->
+<div class="flex flex-row items-center justify-center gap-3 pt-3 w-full max-w-sm">
+<a class="flex-1 h-11 px-5 rounded-full bg-primary hover:bg-primary-dark text-white font-semibold text-sm flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all" href="#courses-catalog">
+<span>Explore Courses</span>
+<span class="material-symbols-outlined text-[17px]">arrow_forward</span>
+</a>
+<a class="flex-1 h-11 px-5 rounded-full bg-white hover:bg-surface-subtle text-primary border border-primary/30 font-semibold text-sm flex items-center justify-center active:scale-95 transition-all" href="#enquiry-form">
+<span>Start Enquiry</span>
+</a>
+</div>
+<!-- Carousel Pagination Dots -->
+<div class="flex items-center justify-center gap-2 pt-5">
+<button aria-label="Slide 1" class="w-6 h-2 rounded-full bg-secondary transition-all" id="dot-0" onclick="setSlide(0)"></button>
+<button aria-label="Slide 2" class="w-2 h-2 rounded-full bg-slate-300 transition-all" id="dot-1" onclick="setSlide(1)"></button>
+<button aria-label="Slide 3" class="w-2 h-2 rounded-full bg-slate-300 transition-all" id="dot-2" onclick="setSlide(2)"></button>
+</div>
+<!-- Hero Institute Visual Card (Clean, bright, inviting) -->
+<div class="w-full mt-6 rounded-2xl overflow-hidden border border-border-subtle shadow-md bg-white relative">
+<img class="w-full h-44 object-cover" data-alt="Modern high-tech computer lab with students learning collaboratively" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByluUiQUyemMe5OdVxt8WQXfkbbyJLvEC2NjWEG10aqNLhU3BQ9duZeEPv-XYkLp9MjjNjQ3pEvIQ0vFPAUdDeQMTcQwkjoSQqqXEJyV3jbz4I9OnhHGnqcv8FUnqPNdwIICRCOTkWNrluaed_CndAHKMHGc4spEghJmuJsZ5onj-tSMNZHK1YW9gqs0dgMEvehUD8C7QAwZyrtxbZvgL3MLpF7f8FlpN1hGEu2x6TScIG67ha03IhNQ"/>
+<div class="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md rounded-xl p-2.5 px-3 border border-border-subtle flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-lg bg-primary-light text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+<div class="text-left">
+<p class="text-xs font-bold text-on-surface">Practical Learning &amp; Project Incubator</p>
+<p class="text-[11px] text-text-muted">100% Hands-On Mentored Sprints</p>
+</div>
+</div>
+<span class="text-[11px] font-bold text-secondary bg-secondary-soft px-2 py-0.5 rounded-full">Active Labs</span>
+</div>
+</div>
+<!-- 3 Highlight Micro-Badges -->
+<div class="grid grid-cols-3 gap-2 w-full mt-4">
+<div class="p-2.5 rounded-xl bg-surface-subtle border border-border-subtle text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-[20px]">terminal</span>
+<span class="font-bold text-xs text-on-surface mt-1">100% Practical</span>
+<span class="text-[10px] text-text-muted">Live Code Drills</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-subtle border border-border-subtle text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary text-[20px]">diversity_3</span>
+<span class="font-bold text-xs text-on-surface mt-1">1:1 Mentorship</span>
+<span class="text-[10px] text-text-muted">Senior Tech Leads</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-subtle border border-border-subtle text-center flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-[20px]">workspace_premium</span>
+<span class="font-bold text-xs text-on-surface mt-1">Real Projects</span>
+<span class="text-[10px] text-text-muted">Portfolio Verified</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== 3. AUDIENCE & CATEGORY FILTER (DISHA GROUP STYLE) ==================== -->
+<section class="px-4 py-6 bg-white border-b border-border-subtle" id="courses-catalog">
+<div class="text-center mb-4">
+<span class="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3 py-1 rounded-full">Our Courses</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Explore Top Technology Programs</h2>
+<p class="text-xs text-on-surface-variant mt-1">Curated programs designed to build high-performance technical competence.</p>
+</div>
+<!-- Audience Segment Toggle (Disha-inspired) -->
+<div class="flex items-center justify-center p-1 bg-surface-muted rounded-xl max-w-sm mx-auto mb-4 border border-border-subtle">
+<button class="audience-btn flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-primary shadow-sm transition-all" onclick="toggleAudience(this, 'all')">
+          For Students &amp; Beginners
+        </button>
+<button class="audience-btn flex-1 py-1.5 text-xs font-medium rounded-lg text-on-surface-variant transition-all hover:text-primary" onclick="toggleAudience(this, 'pro')">
+          For Working Professionals
+        </button>
+</div>
+<!-- Domain Category Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 scroll-smooth">
+<button class="cat-pill flex-shrink-0 h-8 px-4 rounded-full bg-primary text-white text-xs font-semibold shadow-sm transition-all" onclick="filterCategory(this, 'all')">
+          All Courses
+        </button>
+<button class="cat-pill flex-shrink-0 h-8 px-3.5 rounded-full bg-surface-subtle text-on-surface-variant border border-border-subtle text-xs font-medium hover:bg-slate-100 transition-all" onclick="filterCategory(this, 'fullstack')">
+          Full Stack Dev
+        </button>
+<button class="cat-pill flex-shrink-0 h-8 px-3.5 rounded-full bg-surface-subtle text-on-surface-variant border border-border-subtle text-xs font-medium hover:bg-slate-100 transition-all" onclick="filterCategory(this, 'ai')">
+          AI &amp; Machine Learning
+        </button>
+<button class="cat-pill flex-shrink-0 h-8 px-3.5 rounded-full bg-surface-subtle text-on-surface-variant border border-border-subtle text-xs font-medium hover:bg-slate-100 transition-all" onclick="filterCategory(this, 'data')">
+          Data Analytics
+        </button>
+<button class="cat-pill flex-shrink-0 h-8 px-3.5 rounded-full bg-surface-subtle text-on-surface-variant border border-border-subtle text-xs font-medium hover:bg-slate-100 transition-all" onclick="filterCategory(this, 'cloud')">
+          Cloud &amp; DevOps
+        </button>
+<button class="cat-pill flex-shrink-0 h-8 px-3.5 rounded-full bg-surface-subtle text-on-surface-variant border border-border-subtle text-xs font-medium hover:bg-slate-100 transition-all" onclick="filterCategory(this, 'web')">
+          Web Development
+        </button>
+</div>
+</section>
+<!-- ==================== 4. COURSE CARDS GRID (NO PRICING, CLEAN INSTITUTE STYLE) ==================== -->
+<section class="px-4 py-6 bg-surface-subtle space-y-4">
+<!-- Course Card 1: Python Full Stack -->
+<article class="bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="h-32 bg-gradient-to-r from-blue-700 to-indigo-800 p-4 flex flex-col justify-between text-white relative">
+<div class="flex items-center justify-between">
+<span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Beginner to Pro</span>
+<div class="flex items-center gap-1 bg-amber-400 text-slate-900 font-bold text-xs px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">star</span>
+<span>4.9</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] text-blue-200 font-medium">Software Engineering Track</span>
+<h3 class="font-heading font-bold text-lg text-white leading-tight">Python Full Stack Development</h3>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Master full application development from database schemas with PostgreSQL to interactive frontends and cloud deployment.
+          </p>
+<div class="flex flex-wrap gap-1.5">
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Python</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Django</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">React</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">PostgreSQL</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">REST APIs</span>
+</div>
+<div class="flex items-center justify-between text-xs text-text-muted pt-2 border-t border-border-subtle">
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> 16 Weeks</span>
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-secondary">rocket_launch</span> 6 Live Projects</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<a class="h-10 rounded-xl border border-border-medium hover:bg-surface-subtle text-on-surface font-semibold text-xs flex items-center justify-center transition-all" href="#enquiry-form">
+              Learn More
+            </a>
+<a class="h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold text-xs flex items-center justify-center shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+              Enquire Now
+            </a>
+</div>
+</div>
+</article>
+<!-- Course Card 2: MERN Stack Web Engineering -->
+<article class="bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="h-32 bg-gradient-to-r from-emerald-600 to-teal-800 p-4 flex flex-col justify-between text-white relative">
+<div class="flex items-center justify-between">
+<span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Intermediate</span>
+<div class="flex items-center gap-1 bg-amber-400 text-slate-900 font-bold text-xs px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">star</span>
+<span>4.8</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] text-emerald-200 font-medium">JavaScript Ecosystem</span>
+<h3 class="font-heading font-bold text-lg text-white leading-tight">MERN Stack Web Engineering</h3>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Build asynchronous real-time web applications, modern single-page apps, and scalable microservices with full JS stack.
+          </p>
+<div class="flex flex-wrap gap-1.5">
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">MongoDB</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Express</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">React.js</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Node.js</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Redux</span>
+</div>
+<div class="flex items-center justify-between text-xs text-text-muted pt-2 border-t border-border-subtle">
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> 12 Weeks</span>
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-secondary">rocket_launch</span> 4 Live Projects</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<a class="h-10 rounded-xl border border-border-medium hover:bg-surface-subtle text-on-surface font-semibold text-xs flex items-center justify-center transition-all" href="#enquiry-form">
+              Learn More
+            </a>
+<a class="h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold text-xs flex items-center justify-center shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+              Enquire Now
+            </a>
+</div>
+</div>
+</article>
+<!-- Course Card 3: AI & Machine Learning -->
+<article class="bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="h-32 bg-gradient-to-r from-purple-700 to-indigo-900 p-4 flex flex-col justify-between text-white relative">
+<div class="flex items-center justify-between">
+<span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Advanced Specialization</span>
+<div class="flex items-center gap-1 bg-amber-400 text-slate-900 font-bold text-xs px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">star</span>
+<span>4.9</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] text-purple-200 font-medium">Applied Intelligence</span>
+<h3 class="font-heading font-bold text-lg text-white leading-tight">Artificial Intelligence &amp; ML</h3>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Gain practical expertise in deep learning, neural networks, natural language processing, and production AI pipelines.
+          </p>
+<div class="flex flex-wrap gap-1.5">
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Python</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">TensorFlow</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">PyTorch</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Scikit-Learn</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">NLP</span>
+</div>
+<div class="flex items-center justify-between text-xs text-text-muted pt-2 border-t border-border-subtle">
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> 14 Weeks</span>
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-secondary">rocket_launch</span> 5 AI Models</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<a class="h-10 rounded-xl border border-border-medium hover:bg-surface-subtle text-on-surface font-semibold text-xs flex items-center justify-center transition-all" href="#enquiry-form">
+              Learn More
+            </a>
+<a class="h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold text-xs flex items-center justify-center shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+              Enquire Now
+            </a>
+</div>
+</div>
+</article>
+<!-- Course Card 4: Data Analytics & BI -->
+<article class="bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="h-32 bg-gradient-to-r from-sky-600 to-cyan-800 p-4 flex flex-col justify-between text-white relative">
+<div class="flex items-center justify-between">
+<span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">All Skill Levels</span>
+<div class="flex items-center gap-1 bg-amber-400 text-slate-900 font-bold text-xs px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">star</span>
+<span>4.8</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] text-sky-200 font-medium">Business Intelligence</span>
+<h3 class="font-heading font-bold text-lg text-white leading-tight">Data Analytics &amp; Visualization</h3>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Extract actionable business intelligence from complex databases through SQL pipelines, automated models, and BI dashboards.
+          </p>
+<div class="flex flex-wrap gap-1.5">
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Power BI</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">SQL Server</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Python</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Tableau</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Excel Adv</span>
+</div>
+<div class="flex items-center justify-between text-xs text-text-muted pt-2 border-t border-border-subtle">
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> 10 Weeks</span>
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-secondary">rocket_launch</span> 4 Dashboards</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<a class="h-10 rounded-xl border border-border-medium hover:bg-surface-subtle text-on-surface font-semibold text-xs flex items-center justify-center transition-all" href="#enquiry-form">
+              Learn More
+            </a>
+<a class="h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold text-xs flex items-center justify-center shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+              Enquire Now
+            </a>
+</div>
+</div>
+</article>
+<!-- Course Card 5: Java Cloud Architecture -->
+<article class="bg-white rounded-2xl border border-border-subtle overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="h-32 bg-gradient-to-r from-red-600 to-rose-800 p-4 flex flex-col justify-between text-white relative">
+<div class="flex items-center justify-between">
+<span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Intermediate to Advanced</span>
+<div class="flex items-center gap-1 bg-amber-400 text-slate-900 font-bold text-xs px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">star</span>
+<span>4.9</span>
+</div>
+</div>
+<div>
+<span class="text-[11px] text-red-200 font-medium">Enterprise Backend</span>
+<h3 class="font-heading font-bold text-lg text-white leading-tight">Java Cloud Architecture</h3>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Construct high-availability enterprise backend systems with Spring Boot, containerized microservices, and AWS infrastructure.
+          </p>
+<div class="flex flex-wrap gap-1.5">
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Java 17</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Spring Boot</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Microservices</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">Docker</span>
+<span class="text-[11px] bg-surface-muted text-primary font-semibold px-2 py-0.5 rounded border border-border-subtle">AWS</span>
+</div>
+<div class="flex items-center justify-between text-xs text-text-muted pt-2 border-t border-border-subtle">
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span> 16 Weeks</span>
+<span class="flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[16px] text-secondary">rocket_launch</span> 5 Production Apps</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<a class="h-10 rounded-xl border border-border-medium hover:bg-surface-subtle text-on-surface font-semibold text-xs flex items-center justify-center transition-all" href="#enquiry-form">
+              Learn More
+            </a>
+<a class="h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-semibold text-xs flex items-center justify-center shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+              Enquire Now
+            </a>
+</div>
+</div>
+</article>
+<div class="text-center pt-2">
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white border border-primary text-primary hover:bg-primary-light font-bold text-xs tracking-wide shadow-sm transition-all" href="#enquiry-form">
+<span>View Complete Syllabus Catalog (24+ Programs)</span>
+<span class="material-symbols-outlined text-[16px]">east</span>
+</a>
+</div>
+</section>
+<!-- ==================== 5. WHY EXTRA SKILLS MATTER & WHY NAVIORAA (DISHA TRUST SECTION) ==================== -->
+<section class="px-4 py-8 bg-white border-b border-border-subtle" id="why-navioraa">
+<div class="text-center mb-6">
+<span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary-light px-3 py-1 rounded-full">The Career Edge</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Why Extra Skills <span class="text-secondary">Matter</span></h2>
+<p class="text-xs text-on-surface-variant max-w-sm mx-auto mt-1 leading-relaxed">
+          Standard academic coursework is no longer enough. Here is how practical engineering mastery accelerates your career.
+        </p>
+</div>
+<!-- Metric / Value Cards (Disha Group Red/Blue Style) -->
+<div class="grid grid-cols-1 gap-3">
+<!-- Benefit 1 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary text-white font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+            01
+          </div>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Practical, Hands-on Learning</h3>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Learn by writing production code from day one. Daily sprint challenges and terminal exercises replace passive video lectures.</p>
+</div>
+</div>
+<!-- Benefit 2 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary text-white font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+            02
+          </div>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Real-World Project Experience</h3>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Build and deploy full applications on live cloud instances. Showcase genuine architecture on your GitHub and resume.</p>
+</div>
+</div>
+<!-- Benefit 3 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary text-white font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+            03
+          </div>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Industry-Relevant Technologies</h3>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Curriculum regularly updated by active developers to match the tools demanded by modern engineering teams.</p>
+</div>
+</div>
+<!-- Benefit 4 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary text-white font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+            04
+          </div>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">1-on-1 Mentorship &amp; Code Reviews</h3>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Direct mentorship sessions with lead developers, paired programming, and constructive pull-request evaluations.</p>
+</div>
+</div>
+<!-- Benefit 5 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary text-white font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+            05
+          </div>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Portfolio &amp; GitHub Development</h3>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Graduate with verified repositories, live deployment links, and case studies proving real competence to recruiters.</p>
+</div>
+</div>
+<!-- Benefit 6 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary text-white font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-sm">
+            06
+          </div>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Weekend Tech Workshops &amp; Masterclasses</h3>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Exclusive deep-dive hackathons, guest industry talks, and specialized cloud labs included for all learners.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== 6. ENTERPRISE TECHNOLOGY SERVICES (DUAL-MISSION) ==================== -->
+<section class="px-4 py-8 bg-surface-subtle border-b border-border-subtle" id="services">
+<div class="text-center mb-6">
+<span class="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3 py-1 rounded-full">Dual Mission</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Enterprise Technology Solutions</h2>
+<p class="text-xs text-on-surface-variant max-w-sm mx-auto mt-1 leading-relaxed">
+          Beyond education: our agency engineering division delivers custom software, cloud migration, and AI tools for businesses.
+        </p>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Service 1 -->
+<div class="p-4 rounded-2xl bg-white border border-border-subtle shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">cloud_sync</span>
+</span>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Web &amp; Cloud Development</h3>
+<p class="text-[11px] text-text-muted">High-scalability web portals &amp; API gateways</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Custom reactive architectures built on AWS, Azure, Docker, and modern headless CMS platforms for global uptime.
+          </p>
+</div>
+<!-- Service 2 -->
+<div class="p-4 rounded-2xl bg-white border border-border-subtle shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 rounded-xl bg-secondary-soft text-secondary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">terminal</span>
+</span>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Custom Enterprise Software</h3>
+<p class="text-[11px] text-text-muted">Internal tools, automated ERP &amp; CRMs</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Eliminate workflow bottlenecks with customized operational platforms engineered around your team's specific data flows.
+          </p>
+</div>
+<!-- Service 3 -->
+<div class="p-4 rounded-2xl bg-white border border-border-subtle shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">phone_iphone</span>
+</span>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">Mobile Application Development</h3>
+<p class="text-[11px] text-text-muted">Native &amp; cross-platform iOS &amp; Android</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Delivering fluid, user-tested mobile experiences engineered with Flutter and React Native with offline sync capabilities.
+          </p>
+</div>
+<!-- Service 4 -->
+<div class="p-4 rounded-2xl bg-white border border-border-subtle shadow-sm flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="w-10 h-10 rounded-xl bg-secondary-soft text-secondary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">psychology</span>
+</span>
+<div>
+<h3 class="font-heading font-bold text-sm text-on-surface">AI Solutions &amp; Automation</h3>
+<p class="text-[11px] text-text-muted">Generative LLMs, OCR &amp; intelligent RPA bots</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Integrating custom machine learning inference models to automate documentation, customer responses, and pattern detection.
+          </p>
+</div>
+</div>
+<div class="pt-4 text-center">
+<a class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-primary hover:bg-primary-dark text-white font-semibold text-xs shadow-sm active:scale-95 transition-all" href="#enquiry-form">
+<span class="material-symbols-outlined text-[17px]">support_agent</span>
+<span>Consult Our Software Engineering Team</span>
+</a>
+</div>
+</section>
+<!-- ==================== 7. STUDENT & CLIENT LIVE PROJECTS ==================== -->
+<section class="px-4 py-8 bg-white border-b border-border-subtle" id="projects">
+<div class="text-center mb-6">
+<span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary-light px-3 py-1 rounded-full">Proof of Work</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Live Student &amp; Client Projects</h2>
+<p class="text-xs text-on-surface-variant max-w-sm mx-auto mt-1 leading-relaxed">
+          Real products built and shipped by our students and development incubator pods.
+        </p>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Project 1 -->
+<div class="bg-surface-subtle border border-border-subtle rounded-2xl overflow-hidden shadow-sm">
+<div class="relative h-40 w-full bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="HealthSync mobile telemedicine interface on mobile device" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf9ErSC9gFGARUMtx0cVGs-1KO07kE-XhaEWOsHGIlIiW6Nwy5OqT5ddaxJVe-QDj4C3_0yDBnKLIP8d_ptquldE55yFk4yopWVmHkV0qqw0WcVK-q0U_O2JfRdcs6nwBHCRvtAGTUovNvpRGFgZAhQUmXq9ZiG7bQehZqzpA3PiNZdz-ZLLAj7orjLIM9iQ2Ui1WlCKYY3H68BZFJ80-t9ev3vWMY0htA3Eo0PHMop3WV7853DCnYsA"/>
+<span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-primary font-bold text-[10px] uppercase px-2.5 py-1 rounded-md border border-border-subtle">Mobile Health</span>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<h3 class="font-heading font-bold text-base text-on-surface">HealthSync Telemedicine App</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+              Encrypted video consultations and dynamic EHR synchronization with cross-platform doctor and patient portals.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">React Native</span>
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">Node.js</span>
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">WebRTC</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-border-subtle mt-1">
+<a class="text-xs font-bold text-primary hover:text-primary-dark inline-flex items-center gap-1" href="#enquiry-form">
+<span>View Case Study</span>
+<span class="material-symbols-outlined text-[15px]">open_in_new</span>
+</a>
+<span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Production Deployed</span>
+</div>
+</div>
+</div>
+<!-- Project 2 -->
+<div class="bg-surface-subtle border border-border-subtle rounded-2xl overflow-hidden shadow-sm">
+<div class="relative h-40 w-full bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="FinTrack AI predictive analytics web dashboard with dark charts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt9y15jFIRgKXyGlY-IUOa6Ulxjxe7FEHZ4ygX47kG2Bo92WHl3V45Ya2XZg2lNDLVdT_8sdGZfo4oOPjzUEid3Mr8vhFReIReTTJtXXxP-WgMthw0e3gfB5OFhSQk2pnSTAaC8Vh_2PL5GNArk4q6ODbHwrQgj913lB5BH3-TUfYB2fx8FoZxb2gByI3aBvWlJwtc2hB-oXR7FiIF6ehXSh7l_9-Fm9MFP0Pa9q24xEhoYBN_wfOWhA"/>
+<span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-primary font-bold text-[10px] uppercase px-2.5 py-1 rounded-md border border-border-subtle">FinTech AI</span>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<h3 class="font-heading font-bold text-base text-on-surface">FinTrack AI Expense Predictor</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+              Predictive machine learning models identifying anomaly expenses and algorithmic cash-flow simulations for SMBs.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">Python</span>
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">FastAPI</span>
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">Streamlit</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-border-subtle mt-1">
+<a class="text-xs font-bold text-primary hover:text-primary-dark inline-flex items-center gap-1" href="#enquiry-form">
+<span>View Case Study</span>
+<span class="material-symbols-outlined text-[15px]">open_in_new</span>
+</a>
+<span class="text-[11px] font-semibold text-primary bg-primary-light px-2 py-0.5 rounded">Incubator Project</span>
+</div>
+</div>
+</div>
+<!-- Project 3 -->
+<div class="bg-surface-subtle border border-border-subtle rounded-2xl overflow-hidden shadow-sm">
+<div class="relative h-40 w-full bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="EduVibe student portal dashboard showing syllabus tracker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt-3nE7bLYoEc06_hpXtSjlHp6WsiygwTNQz2PAINxeQQkZEn6PHmnfs8VBDIRiuBrwea86E9NPOW49a3C5AGY7cKFYIPNpjlAE5CKILylU7btGPIT0pWi0azx94_Y361fbuQZnleHrOSJ2POy55PZZxeWVK11agAKrtDW03WzQZ280PSTmQwhcfmaY00tTvi1AiLUCHz09Wmu6RtGKL_EjbWiOeXr9rpGIzoTPSjqhJfw0fNfCOwcwg"/>
+<span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-primary font-bold text-[10px] uppercase px-2.5 py-1 rounded-md border border-border-subtle">EdTech Cloud</span>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<h3 class="font-heading font-bold text-base text-on-surface">EduVibe Learning LMS Platform</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+              Full-scale asynchronous video course delivery platform featuring browser-based code runners and automated tests.
+            </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">Next.js</span>
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">Tailwind CSS</span>
+<span class="text-[10px] bg-white text-slate-700 font-semibold px-2 py-0.5 rounded border border-border-subtle">Supabase</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-border-subtle mt-1">
+<a class="text-xs font-bold text-primary hover:text-primary-dark inline-flex items-center gap-1" href="#enquiry-form">
+<span>View Live Demo</span>
+<span class="material-symbols-outlined text-[15px]">open_in_new</span>
+</a>
+<span class="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">Open Source</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== 8. LEADERSHIP & FACULTY TEAM ==================== -->
+<section class="px-4 py-8 bg-surface-subtle border-b border-border-subtle" id="mentors">
+<div class="text-center mb-6">
+<span class="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3 py-1 rounded-full">Core Leadership</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Meet Our Mentors &amp; Leads</h2>
+<p class="text-xs text-on-surface-variant max-w-sm mx-auto mt-1 leading-relaxed">
+          Seasoned software architects and pedagogical leaders guiding your engineering trajectory.
+        </p>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Shubham -->
+<div class="bg-white rounded-2xl p-3.5 border border-border-subtle shadow-sm flex items-center gap-3">
+<div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20 bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="Portrait of Shubham, Founder &amp; CEO" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa_WSW8m4TWYjK86YTPjBEJw81ncR7hMWmutBNBrs_edazprH7gJ4AvsCoYPhs1XURNDk8BEqWhdJJRuhMxy-STstF8j-U6F429qxEb6L2GcjhkHp-MXiK2rVyiL1YRzZIqpl-NUVHBJinwHxnvZWJyVvRUGbB-n4sk7pKrTLLaw5H65iFU9SeniqfnXyPWAojTAplMKscGMI6MIvItz5L9qtLktxLRWv9u8urbJcoQ-oUQBCnEYZyZQ"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface">Shubham</h3>
+<p class="text-xs font-bold text-secondary">Founder &amp; CEO</p>
+<p class="text-[11px] text-text-muted mt-0.5 truncate">Leading vision in practical tech education &amp; projects.</p>
+</div>
+</div>
+<!-- Sakshi -->
+<div class="bg-white rounded-2xl p-3.5 border border-border-subtle shadow-sm flex items-center gap-3">
+<div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20 bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sakshi, Technical &amp; Project Lead" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFw9PesiP-WNwytvumHElROfUBETnZ7L9A44yDUZhNojeSft8DRUk6_RsEhxV6HQTC0dRnWUARvmZaOuJf3DhokqnPQMMN0ZeaE-cMDqHIL-oVjbVJxEe_fRt3UI1QqCzXg8lZgbSyTxPXHi-uysKdfdkcO59UmARyUaojXSLIbpkDMVD9WroRvFBIv-NI8IYKsY0eCuWByfhaQx6eB4_0xAxXswSvKJm38KKrft6REAg6Or5pSmMhgQ"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface">Sakshi</h3>
+<p class="text-xs font-bold text-primary">Technical &amp; Project Lead (MD)</p>
+<p class="text-[11px] text-text-muted mt-0.5 truncate">Architecting modern full-stack workflows &amp; sprints.</p>
+</div>
+</div>
+<!-- Chaitanya -->
+<div class="bg-white rounded-2xl p-3.5 border border-border-subtle shadow-sm flex items-center gap-3">
+<div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20 bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="Portrait of Chaitanya, Operations &amp; BD Lead" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2HjsWhHL-uBAZ7BCZ-rCriA3znCNvZh6FOMKiUxMfNHP5Mes68rEC71fOLznZ5YYliutKdvKBPvn7z1M1qBhKiHEoVZVNd6G0o1h69-mDgoh-JPhqQ_trpwgk8ybEwK2afOuOlXKrZF41xlGjVWD3ickD_qb-0LsstFAHc_MhAhtwmRW_pMFf5OvqW4Olcq0I4NueJYEd0HIy164IjkchGYWmUOciTlUWqYqYl3BI-H-bxmOTtPbjuw"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface">Chaitanya</h3>
+<p class="text-xs font-bold text-secondary">Operations &amp; BD Lead (MD)</p>
+<p class="text-[11px] text-text-muted mt-0.5 truncate">Scaling enterprise partnerships &amp; career tracks.</p>
+</div>
+</div>
+<!-- Sandip -->
+<div class="bg-white rounded-2xl p-3.5 border border-border-subtle shadow-sm flex items-center gap-3">
+<div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20 bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sandip, Head of Training &amp; Education" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Ri-lkVANJGjUtTcXZwXSjiS6I8sFi1aUim8pH3UrApaKUwR2aMWeGeYKxhpNqtgOsjmj4RQYHXjTUHyGr4KETAR-GqCV1akA0u6mQ1KZwsaM6lP_5ern-t3Z5ed4yxqIgH1HmdRl31kk3zeQh03hDzBCZzFqPtkfoeFk39yo3slnJn8j1P0IMcVvKzAzcSwAmTJ1UVgCIh1NO6SsF2MFRVK0HMEJSCAExsvVNXXfG5eimyM_f3QABg"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface">Sandip</h3>
+<p class="text-xs font-bold text-primary">Head of Training &amp; Education (MD)</p>
+<p class="text-[11px] text-text-muted mt-0.5 truncate">Curriculum director with deep engineering pedagogy.</p>
+</div>
+</div>
+<!-- Disha -->
+<div class="bg-white rounded-2xl p-3.5 border border-border-subtle shadow-sm flex items-center gap-3">
+<div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary/20 bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="Portrait of Disha, Marketing &amp; Admissions Lead" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjhPanUaoPzERoL7Ox4OfAZj8-Osl48hy7hsUWiytNenerlDfvCoZjzgQ-dkZNuRcVIJ1KOfAmVnEcpwio37dfCAWGBzxCGqoih48jJkUNUunWA4y1B_pRjSeu7ga2hQ4b1AX2bAekB2MqQcj4sGPRtqao3UR4kT5LVBYlzM0I3ngocTFi0pfOSObCbYPn_r3O79D9ZkzkwnhuHMynfNon00YgMeCZnKRDdjADAt0tMn7wdGOZTlMTSA"/>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface">Disha</h3>
+<p class="text-xs font-bold text-secondary">Marketing &amp; Admissions Lead (MD)</p>
+<p class="text-[11px] text-text-muted mt-0.5 truncate">Connecting aspiring developers to modern tech domains.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== 9. STUDENT LEARNING RESOURCES ==================== -->
+<section class="px-4 py-8 bg-white border-b border-border-subtle" id="resources">
+<div class="text-center mb-6">
+<span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary-light px-3 py-1 rounded-full">Open Source &amp; Starters</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Student Learning Resources</h2>
+<p class="text-xs text-on-surface-variant max-w-sm mx-auto mt-1 leading-relaxed">
+          Accelerate your progress with curated engineering notes, reference guides, and starters.
+        </p>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Resource 1 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">description</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface truncate">Free Programming Notes</h3>
+<p class="text-[11px] text-text-muted truncate">Python, JS, SQL cheat sheets for interviews</p>
+</div>
+</div>
+<a class="h-9 px-3.5 rounded-full bg-primary text-white font-semibold text-xs flex items-center justify-center flex-shrink-0 active:scale-95 transition-all" href="#enquiry-form">
+            Get PDF
+          </a>
+</div>
+<!-- Resource 2 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-secondary-soft text-secondary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">download_for_offline</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface truncate">Downloadable Lab Guides</h3>
+<p class="text-[11px] text-text-muted truncate">Terminal setup, Docker &amp; Git handbook</p>
+</div>
+</div>
+<a class="h-9 px-3.5 rounded-full bg-primary text-white font-semibold text-xs flex items-center justify-center flex-shrink-0 active:scale-95 transition-all" href="#enquiry-form">
+            Download
+          </a>
+</div>
+<!-- Resource 3 -->
+<div class="p-4 rounded-2xl bg-surface-subtle border border-border-subtle flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">code_blocks</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-heading font-bold text-sm text-on-surface truncate">GitHub Starter Boilerplates</h3>
+<p class="text-[11px] text-text-muted truncate">Full-stack React &amp; Django project skeletons</p>
+</div>
+</div>
+<a class="h-9 px-3.5 rounded-full bg-primary text-white font-semibold text-xs flex items-center justify-center flex-shrink-0 active:scale-95 transition-all" href="#enquiry-form">
+            Access
+          </a>
+</div>
+</div>
+</section>
+<!-- ==================== 10. CLEAN ENQUIRY & CONTACT FORM ==================== -->
+<section class="px-4 py-8 bg-surface-subtle" id="enquiry-form">
+<div class="max-w-lg mx-auto">
+<div class="text-center mb-6">
+<span class="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3 py-1 rounded-full">Get In Touch</span>
+<h2 class="font-heading font-extrabold text-2xl text-on-surface mt-2">Start Your Learning Journey</h2>
+<p class="text-xs text-on-surface-variant mt-1">Speak with our academic mentors to choose the right tech track.</p>
+</div>
+<!-- Form Card -->
+<div class="bg-white rounded-2xl p-5 border border-border-subtle shadow-md">
+<form class="flex flex-col gap-3" onsubmit="handleFormSubmit(event)">
+<div>
+<label class="block text-xs font-bold text-on-surface mb-1" for="fullName">Full Name *</label>
+<input class="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-surface text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="fullName" placeholder="e.g. Rahul Sharma" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface mb-1" for="email">Email Address *</label>
+<input class="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-surface text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="email" placeholder="rahul@example.com" required="" type="email"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface mb-1" for="phone">Phone / WhatsApp Number *</label>
+<input class="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-surface text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="phone" placeholder="+91 98765 43210" required="" type="tel"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface mb-1" for="program">Program / Service of Interest *</label>
+<select class="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-surface text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="program" required="">
+<option disabled="" selected="" value="">Select a domain track</option>
+<option value="python">Python Full Stack Development</option>
+<option value="mern">MERN Stack Web Engineering</option>
+<option value="ai">Artificial Intelligence &amp; Machine Learning</option>
+<option value="data">Data Analytics &amp; Visualization</option>
+<option value="java">Java Cloud Architecture</option>
+<option value="enterprise">Enterprise Software / IT Development Services</option>
+<option value="general">General Academic Consultation</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface mb-1" for="message">Your Career Goal / Background</label>
+<textarea class="w-full p-3 rounded-xl border border-border-medium bg-surface text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none" id="message" placeholder="Tell us about your background or target career role..." rows="3"></textarea>
+</div>
+<button class="w-full h-12 mt-1 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all" id="submit-btn" type="submit">
+<span>Submit Enquiry</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</form>
+<!-- Feedback Success State -->
+<div class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2.5 mt-3" id="form-success">
+<span class="material-symbols-outlined text-emerald-600 text-[22px]">check_circle</span>
+<div class="text-xs">
+<p class="font-bold">Enquiry Received Successfully!</p>
+<p class="text-[11px] text-emerald-700">Our faculty counselor will reach out within 2 hours.</p>
+</div>
+</div>
+<div class="relative flex items-center justify-center my-3">
+<div class="w-full h-px bg-border-subtle"></div>
+<span class="absolute px-2 bg-white text-[10px] font-bold text-text-muted">OR</span>
+</div>
+<!-- Instant WhatsApp CTA -->
+<a class="w-full h-11 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all" href="https://wa.me/" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span>Chat Directly on WhatsApp</span>
+</a>
+<!-- Trust Subtext -->
+<p class="text-[11px] text-text-muted text-center mt-3 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-emerald-600">verified_user</span>
+<span>Zero spam · Direct counselor response · Confidential</span>
+</p>
+</div>
+</div>
+</section>
+<!-- ==================== 11. CLEAN PROFESSIONAL FOOTER ==================== -->
+<footer class="bg-slate-900 text-white px-4 pt-10 pb-8 border-t border-slate-800">
+<div class="flex flex-col gap-6">
+<!-- Institute Brand Details -->
+<div>
+<div class="flex items-center gap-2">
+<img alt="NAVIORAA Logo" class="h-8 w-auto object-contain brightness-0 invert" src="https://lh3.googleusercontent.com/aida/AEtjO1WvXapdEnMeltY8iU9JwLdNKOOhH7ol8heGxaeDchiHMIQiUDUyAuHcuck53FXh1wQZvsQ_KMJHLuP9j-hYcpx4NjKm43K4yXHYRfZ7Hr7jgG_Sf4z888BGGW993BnVKCLGDXqlrJ748xu2l9Ip1YsAWTfk7IkPQJVfnkCMNvZzGqwTVaSacqoNkCcMFJ0cXECpzLvUGq0ESurWQ7xF9ukcpKDb0t1mtDoh8wHgUzc3mCIbW9z4y2U_RVO8"/>
+<span class="font-heading font-extrabold text-lg text-white">NAVIORAA</span>
+</div>
+<p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            NAVIORAA Institute of Technology &amp; R&amp;D is committed to modern, project-first technical pedagogy and enterprise software engineering.
+          </p>
+</div>
+<!-- Navigation Columns -->
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-800">
+<div class="flex flex-col gap-2">
+<p class="text-xs font-bold text-white uppercase tracking-wider">Programs</p>
+<a class="text-xs text-slate-400 hover:text-white" href="#courses-catalog">Python Full Stack</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#courses-catalog">MERN Stack Web Dev</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#courses-catalog">AI &amp; Machine Learning</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#courses-catalog">Data Analytics &amp; BI</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#courses-catalog">Java Cloud Backend</a>
+</div>
+<div class="flex flex-col gap-2">
+<p class="text-xs font-bold text-white uppercase tracking-wider">Institute</p>
+<a class="text-xs text-slate-400 hover:text-white" href="#why-navioraa">Why Navioraa</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#services">Enterprise Agency</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#projects">Student Work</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#mentors">Faculty Mentors</a>
+<a class="text-xs text-slate-400 hover:text-white" href="#resources">Free Study Notes</a>
+</div>
+</div>
+<!-- Legal & Copyright -->
+<div class="pt-4 border-t border-slate-800 flex flex-col gap-2 text-[11px] text-slate-500">
+<div class="flex items-center gap-4">
+<a class="hover:underline" href="#">Privacy Policy</a>
+<a class="hover:underline" href="#">Terms of Admission</a>
+<a class="hover:underline" href="#">Code of Conduct</a>
+</div>
+<p>© <span id="current-year"></span> NAVIORAA Institute of Technology &amp; R&amp;D. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</main>
+<!-- ==================== 12. BOTTOM MOBILE NAVIGATION BAR ==================== -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-white/95 backdrop-blur-md border-t border-border-subtle shadow-[0_-2px_12px_rgba(0,0,0,0.05)]">
+<div class="flex justify-around items-center h-16 px-2">
+<a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-primary font-bold" href="#">
+<span class="material-symbols-outlined text-[20px]">home</span>
+<span class="text-[11px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-slate-500 hover:text-primary font-medium" href="#courses-catalog">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-[11px]">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-slate-500 hover:text-primary font-medium" href="#projects">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+<span class="text-[11px]">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-[#25D366] hover:text-[#1EBE5D] font-medium" href="https://wa.me/" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span class="text-[11px]">WhatsApp</span>
+</a>
+</div>
+</nav>
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+    // Current year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Carousel Data & Transition
+    const heroSlides = [
+      {
+        title: 'Master In-Demand Tech Skills. <span class="text-primary">Build Your Future.</span>',
+        sub: 'Discover practical IT training, master in-demand technologies, and turn your ideas into real-world projects with Navioraa.'
+      },
+      {
+        title: 'Learn Programming by <span class="text-primary">Building Real Projects.</span>',
+        sub: 'Write functional, production-grade source code with daily mentor guidance, sprint reviews, and paired programming.'
+      },
+      {
+        title: 'Turn Your Ideas into <span class="text-primary">Digital Solutions.</span>',
+        sub: 'From full-stack enterprise platforms to predictive AI models, graduate with a verified portfolio that commands attention.'
+      }
+    ];
+
+    let currentHeroSlide = 0;
+
+    function setSlide(index) {
+      currentHeroSlide = index;
+      const titleEl = document.getElementById('slide-title');
+      const subEl = document.getElementById('slide-sub');
+
+      titleEl.style.opacity = '0';
+      subEl.style.opacity = '0';
+
+      setTimeout(() => {
+        titleEl.innerHTML = heroSlides[index].title;
+        subEl.textContent = heroSlides[index].sub;
+        titleEl.style.opacity = '1';
+        subEl.style.opacity = '1';
+      }, 150);
+
+      for (let i = 0; i < 3; i++) {
+        const dot = document.getElementById('dot-' + i);
+        if (i === index) {
+          dot.className = "w-6 h-2 rounded-full bg-secondary transition-all";
+        } else {
+          dot.className = "w-2 h-2 rounded-full bg-slate-300 transition-all";
+        }
+      }
+    }
+
+    // Audience Toggle (Students vs Professionals)
+    function toggleAudience(btn, mode) {
+      document.querySelectorAll('.audience-btn').forEach(b => {
+        b.classList.remove('bg-white', 'text-primary', 'shadow-sm', 'font-bold');
+        b.classList.add('text-on-surface-variant', 'font-medium');
+      });
+      btn.classList.add('bg-white', 'text-primary', 'shadow-sm', 'font-bold');
+      btn.classList.remove('text-on-surface-variant', 'font-medium');
+    }
+
+    // Domain Category Pills Filter
+    function filterCategory(btn, category) {
+      document.querySelectorAll('.cat-pill').forEach(el => {
+        el.classList.remove('bg-primary', 'text-white', 'shadow-sm');
+        el.classList.add('bg-surface-subtle', 'text-on-surface-variant', 'border', 'border-border-subtle');
+      });
+      btn.classList.remove('bg-surface-subtle', 'text-on-surface-variant', 'border', 'border-border-subtle');
+      btn.classList.add('bg-primary', 'text-white', 'shadow-sm');
+    }
+
+    // Form submission simulation
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const successMsg = document.getElementById('form-success');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Processing...';
+
+      setTimeout(() => {
+        btn.classList.add('hidden');
+        successMsg.classList.remove('hidden');
+      }, 500);
+    }
+  </script>
+</body></html>
