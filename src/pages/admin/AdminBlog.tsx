@@ -33,7 +33,7 @@ export const AdminBlog: React.FC = () => {
       excerpt: '',
       content: '',
       coverImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
-      author: 'Navioraa Technical Lead',
+      author: 'NAVIORAA Technical Faculty',
       tags: ['Engineering', 'Tutorial'],
       published: true,
     });
@@ -105,6 +105,10 @@ export const AdminBlog: React.FC = () => {
                   src={post.coverImage}
                   alt={post.title}
                   className="w-full h-full object-cover opacity-90"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80';
+                  }}
                 />
                 <span className="absolute top-3 left-3 bg-white/95 text-primary font-bold text-[10px] uppercase px-2.5 py-0.5 rounded-md">
                   {post.tags[0] || 'Technical'}
@@ -119,7 +123,9 @@ export const AdminBlog: React.FC = () => {
                 <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
                   {post.excerpt}
                 </p>
-                <p className="text-[11px] text-text-muted">By {post.author}</p>
+                <p className="text-[11px] text-text-muted">
+                  Faculty: {post.author && !post.author.toLowerCase().includes('sakshi') && !post.author.toLowerCase().includes('sandip') ? post.author : 'NAVIORAA Technical Faculty'}
+                </p>
               </div>
             </div>
 

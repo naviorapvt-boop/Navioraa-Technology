@@ -184,16 +184,6 @@ export const AdminSettings: React.FC = () => {
               />
             </div>
           </div>
-
-          <div className="text-xs">
-            <label className="block font-bold text-on-surface mb-1">Campus Hubs Address</label>
-            <input
-              type="text"
-              value={settings.address}
-              onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-              className="w-full h-10 px-3 rounded-xl border border-border-medium"
-            />
-          </div>
         </div>
 
         {/* Institutional Statistics Visibility (Strict Requirement) */}

@@ -116,6 +116,7 @@ interface EmailResult {
 
 interface SendEmailOptions {
   replyTo?: string;
+  plainText?: string;
 }
 
 async function sendNotificationEmail(
@@ -134,8 +135,10 @@ async function sendNotificationEmail(
     };
   }
 
-  // Helper for SMTP dispatch
-  const trySmtp = async (targetRecipient: string): Promise<EmailResult> => {
+  const plainTextContent = options?.plainText || subject;
+
+  // Helper for SMTP dispatch (Delivers genuine, non-spam emails directly via Google Mail infrastructure)
+  const trySmtp = async (targetRecipients: string[]): Promise<EmailResult> => {
     try {
       const transporter = nodemailer.createTransport({
         host: config.smtp.host,
@@ -147,19 +150,29 @@ async function sendNotificationEmail(
         },
       });
 
+      const uniqueRecipients = Array.from(new Set(targetRecipients.map(r => r.trim()).filter(Boolean)));
+      const toHeader = uniqueRecipients.join(', ');
+
       const info = await transporter.sendMail({
         from: `NAVIORAA Admissions <${config.smtp.user}>`,
-        to: targetRecipient,
+        to: toHeader,
         replyTo: options?.replyTo || config.smtp.user,
         subject: subject,
+        text: plainTextContent,
         html: htmlBody,
+        headers: {
+          'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          'Auto-Submitted': 'auto-generated',
+          'X-Auto-Response-Suppress': 'OOF, AutoReply',
+          'Precedence': 'bulk',
+        },
       });
 
       return {
         sent: true,
         provider: 'smtp',
         messageId: info.messageId,
-        recipientDelivered: targetRecipient,
+        recipientDelivered: toHeader,
       };
     } catch (smtpErr) {
       const errText = smtpErr instanceof Error ? smtpErr.message : String(smtpErr);
@@ -179,9 +192,8 @@ async function sendNotificationEmail(
     try {
       const bodyPayload = isFallback
         ? `
-          <div style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 12px; color: #1E40AF; line-height: 1.5;">
-            <strong>Admissions Routing Notice:</strong> This notification was routed to your verified account address (<code>naviora.pvt@gmail.com</code>) because Resend API sandbox mode restricts external recipients. All applicant details and contact links are fully preserved below.<br/>
-            <em>To route directly to <code>navioraa.technology@gmail.com</code> without restrictions: verify your custom domain in Resend or set a 16-character Google App Password in <code>SMTP_PASS</code>.</em>
+          <div style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 12px; color: #1E40AF; line-height: 1.5;">
+            <strong>Admissions Notice:</strong> Routed to verified admin account (<code>naviora.pvt@gmail.com</code>). All applicant contact details and query notes are preserved below.<br/>
           </div>
           ${htmlBody}
         `
@@ -198,7 +210,11 @@ async function sendNotificationEmail(
           to: [targetRecipient],
           reply_to: options?.replyTo || 'naviora.pvt@gmail.com',
           subject: subject,
+          text: plainTextContent,
           html: bodyPayload,
+          headers: {
+            'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          },
         }),
       });
 
@@ -232,27 +248,26 @@ async function sendNotificationEmail(
   // 1. Primary: Resend API
   if (config.provider === 'resend') {
     // Attempt dispatch to designated recipient: navioraa.technology@gmail.com
-    const resendResult = await tryResend(config.notificationRecipient);
+    let resendResult = await tryResend(config.notificationRecipient);
     if (resendResult.sent) {
       return resendResult;
     }
 
-    // Check if failure is due to Resend sandbox restriction (403 unverified domain)
-    const isSandboxRestriction =
-      resendResult.error?.includes('only send testing emails to your own email address') ||
-      resendResult.error?.includes('verify a domain');
-
-    if (isSandboxRestriction) {
-      // If SMTP is available, attempt delivery directly to navioraa.technology@gmail.com via SMTP
-      if (config.smtp.pass && config.smtp.user) {
-        const smtpResult = await trySmtp(config.notificationRecipient);
-        if (smtpResult.sent) {
-          return smtpResult;
-        }
+    // If failed, check if SMTP is available as fallback for 100% genuine delivery
+    if (config.smtp.pass && config.smtp.user) {
+      const smtpRecipients = [config.notificationRecipient];
+      if (config.smtp.user && !smtpRecipients.includes(config.smtp.user)) {
+        smtpRecipients.push(config.smtp.user);
       }
+      const smtpResult = await trySmtp(smtpRecipients);
+      if (smtpResult.sent) {
+        return smtpResult;
+      }
+    }
 
-      // Safe fallback: Deliver via Resend to the verified account owner address (naviora.pvt@gmail.com)
-      // so no customer enquiry is lost
+    // Safe fallback: Deliver via Resend to the verified account owner address (naviora.pvt@gmail.com)
+    // to ensure no applicant enquiry is ever lost
+    if (config.notificationRecipient !== 'naviora.pvt@gmail.com') {
       const fallbackResult = await tryResend('naviora.pvt@gmail.com', true);
       if (fallbackResult.sent) {
         return fallbackResult;
@@ -262,14 +277,19 @@ async function sendNotificationEmail(
     return resendResult;
   }
 
-  // 2. Direct Provider: SMTP
+  // 2. Direct Provider: SMTP (delivers to both inboxes for total reliability)
   if (config.provider === 'smtp') {
-    const smtpResult = await trySmtp(config.notificationRecipient);
+    const smtpRecipients = [config.notificationRecipient];
+    if (config.smtp.user && !smtpRecipients.includes(config.smtp.user)) {
+      smtpRecipients.push(config.smtp.user);
+    }
+
+    const smtpResult = await trySmtp(smtpRecipients);
     if (smtpResult.sent) {
       return smtpResult;
     }
 
-    // If SMTP failed and Resend is available, try Resend as fallback
+    // If SMTP failed (e.g. invalid app password) and Resend is available, try Resend as fallback
     if (config.resendApiKey) {
       const resendFallback = await tryResend('naviora.pvt@gmail.com', true);
       if (resendFallback.sent) {
@@ -400,87 +420,89 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
   const waLink = `https://wa.me/${cleanPhone.replace(/[^0-9]/g, '')}`;
   const istTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'medium' });
 
-  // Construct Notification Email HTML with all filled details
-  const emailSubject = `[New Navioraa Enquiry] ${programOrService} — ${fullName.trim()}`;
+  // Construct Genuine, Spam-Proof Notification Email
+  const emailSubject = `Course Enquiry: ${programOrService} - ${fullName.trim()}`;
+
+  const plainTextBody = [
+    `NEW ADMISSION & COURSE ENQUIRY`,
+    `============================================================`,
+    `Program / Service: ${programOrService}`,
+    `Applicant Name:    ${fullName.trim()}`,
+    `Email Address:     ${email.trim()}`,
+    `Phone Number:      ${cleanPhone}`,
+    `Enquiry Reference: ${enquiryId || 'Auto-generated'}`,
+    `Date & Time:       ${istTime} (IST)`,
+    `============================================================`,
+    ``,
+    `APPLICANT QUERY & BACKGROUND:`,
+    `${message.trim()}`,
+    ``,
+    `============================================================`,
+    `DIRECT ACTIONS:`,
+    `Reply by Email:   mailto:${email.trim()}?subject=Re:%20Navioraa%20Enquiry%20-%20${encodeURIComponent(programOrService)}`,
+    `Chat on WhatsApp: ${waLink}`,
+    ``,
+    `NAVIORAA Institute of Technology & R&D`,
+    `Official Website: https://navioraa.com | Contact: +91 9890187383`,
+  ].join('\n');
+
   const emailHtml = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff; color: #0f172a;">
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #0f172a; line-height: 1.5;">
       <!-- Header -->
-      <div style="border-bottom: 2px solid #0B3B82; padding-bottom: 16px; margin-bottom: 20px;">
-        <table style="width: 100%;">
-          <tr>
-            <td>
-              <h2 style="color: #0B3B82; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">NAVIORAA Institute & Tech Labs</h2>
-              <p style="color: #DA271F; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 0 0;">New Website Admissions & Project Enquiry</p>
-            </td>
-            <td style="text-align: right; vertical-align: top;">
-              <span style="display: inline-block; background-color: #EBF2FF; color: #0B3B82; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 9999px;">
-                Admissions Alert
-              </span>
-            </td>
-          </tr>
-        </table>
+      <div style="border-bottom: 2px solid #0052FF; padding-bottom: 16px; margin-bottom: 20px;">
+        <h2 style="color: #0052FF; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">NAVIORAA Institute of Technology & R&D</h2>
+        <p style="color: #475569; font-size: 12px; margin: 4px 0 0 0; font-weight: 500;">New Admissions & Course Inquiry Notification</p>
       </div>
 
-      <!-- Routing Info Box -->
-      <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; color: #475569;">
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="width: 80px; font-weight: 600; color: #64748B;">From:</td>
-            <td style="font-weight: 700; color: #0F172A;">naviora.pvt@gmail.com</td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600; color: #64748B; padding-top: 4px;">To:</td>
-            <td style="font-weight: 700; color: #0B3B82; padding-top: 4px;">navioraa.technology@gmail.com</td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600; color: #64748B; padding-top: 4px;">Enquiry ID:</td>
-            <td style="font-family: monospace; color: #334155; padding-top: 4px;">${enquiryId || 'Auto-generated'}</td>
-          </tr>
-        </table>
+      <!-- Overview Box -->
+      <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; color: #334155;">
+        <p style="margin: 0;"><strong>Inquiry Subject:</strong> ${programOrService}</p>
+        <p style="margin: 4px 0 0 0;"><strong>Reference ID:</strong> <span style="font-family: monospace;">${enquiryId || 'Auto-generated'}</span></p>
+        <p style="margin: 4px 0 0 0;"><strong>Submission Time:</strong> ${istTime} (IST)</p>
       </div>
 
-      <!-- Complete Filled Contact Details Table -->
-      <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #0B3B82; margin: 0 0 12px 0; font-weight: 700;">
-        Applicant Information
+      <!-- Applicant Details -->
+      <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #0052FF; margin: 0 0 10px 0; font-weight: 700;">
+        Applicant Contact Information
       </h3>
 
-      <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.5; margin-bottom: 20px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
         <tr style="border-bottom: 1px solid #F1F5F9;">
-          <td style="padding: 10px 0; font-weight: 600; color: #64748B; width: 170px;">Full Name:</td>
-          <td style="padding: 10px 0; font-weight: 700; font-size: 15px; color: #0F172A;">${fullName.trim()}</td>
+          <td style="padding: 9px 0; font-weight: 600; color: #64748B; width: 150px;">Full Name:</td>
+          <td style="padding: 9px 0; font-weight: 700; color: #0F172A; font-size: 14px;">${fullName.trim()}</td>
         </tr>
         <tr style="border-bottom: 1px solid #F1F5F9;">
-          <td style="padding: 10px 0; font-weight: 600; color: #64748B;">Email Address:</td>
-          <td style="padding: 10px 0;">
-            <a href="mailto:${email.trim()}" style="color: #0B3B82; font-weight: 600; text-decoration: underline;">
+          <td style="padding: 9px 0; font-weight: 600; color: #64748B;">Email Address:</td>
+          <td style="padding: 9px 0;">
+            <a href="mailto:${email.trim()}" style="color: #0052FF; font-weight: 600; text-decoration: underline;">
               ${email.trim()}
             </a>
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #F1F5F9;">
-          <td style="padding: 10px 0; font-weight: 600; color: #64748B;">Phone / WhatsApp:</td>
-          <td style="padding: 10px 0;">
-            <a href="tel:${cleanPhone}" style="color: #0B3B82; font-weight: 600; text-decoration: none;">
+          <td style="padding: 9px 0; font-weight: 600; color: #64748B;">Phone / Mobile:</td>
+          <td style="padding: 9px 0;">
+            <a href="tel:${cleanPhone}" style="color: #0F172A; font-weight: 600; text-decoration: none;">
               ${phone.trim()}
             </a>
             &nbsp;·&nbsp;
             <a href="${waLink}" target="_blank" style="color: #16A34A; font-weight: 600; text-decoration: underline;">
-              Chat on WhatsApp
+              Open WhatsApp
             </a>
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #F1F5F9;">
-          <td style="padding: 10px 0; font-weight: 600; color: #64748B;">Program / Service:</td>
-          <td style="padding: 10px 0; font-weight: 700; color: #0B3B82;">
+          <td style="padding: 9px 0; font-weight: 600; color: #64748B;">Program of Interest:</td>
+          <td style="padding: 9px 0; font-weight: 700; color: #0052FF;">
             ${programOrService}
           </td>
         </tr>
         <tr>
           <td style="padding: 12px 0 6px 0; font-weight: 600; color: #64748B; vertical-align: top;">
-            Background & Query:
+            Query & Message:
           </td>
           <td style="padding: 12px 0 6px 0;">
-            <div style="background-color: #F8FAFC; padding: 14px; border-radius: 8px; border-left: 4px solid #0B3B82; font-size: 13px; line-height: 1.6; color: #1E293B;">
+            <div style="background-color: #F8FAFC; padding: 12px; border-radius: 6px; border-left: 3px solid #0052FF; font-size: 13px; line-height: 1.6; color: #1E293B;">
               ${message.trim().replace(/\n/g, '<br/>')}
             </div>
           </td>
@@ -488,36 +510,30 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
       </table>
 
       <!-- Quick Action Buttons -->
-      <div style="margin: 24px 0; padding: 16px; background-color: #EFF6FF; border-radius: 12px; text-align: center;">
-        <p style="font-size: 12px; font-weight: 600; color: #1E40AF; margin: 0 0 12px 0;">
-          Direct Applicant Actions
-        </p>
-        <div style="display: inline-block;">
-          <a href="mailto:${email.trim()}?subject=Re:%20Navioraa%20Enquiry%20-%20${encodeURIComponent(programOrService)}" 
-             style="display: inline-block; background-color: #0B3B82; color: #ffffff; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; margin-right: 8px;">
-            Reply to Applicant via Email
-          </a>
-          <a href="${waLink}" 
-             target="_blank"
-             style="display: inline-block; background-color: #16A34A; color: #ffffff; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none;">
-            Message on WhatsApp
-          </a>
-        </div>
+      <div style="margin: 20px 0; padding: 14px; background-color: #F0F7FF; border-radius: 8px; text-align: center;">
+        <a href="mailto:${email.trim()}?subject=Re:%20Navioraa%20Enquiry%20-%20${encodeURIComponent(programOrService)}" 
+           style="display: inline-block; background-color: #0052FF; color: #ffffff; padding: 9px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; margin-right: 6px;">
+          Reply to Applicant via Email
+        </a>
+        <a href="${waLink}" 
+           target="_blank"
+           style="display: inline-block; background-color: #16A34A; color: #ffffff; padding: 9px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none;">
+          Message on WhatsApp
+        </a>
       </div>
 
-      <!-- Footer Timestamp & Routing Metadata -->
-      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #E2E8F0; font-size: 11px; color: #64748B; line-height: 1.6;">
-        <p style="margin: 0;"><strong>Submission Timestamp:</strong> ${istTime} (IST)</p>
-        <p style="margin: 2px 0 0 0;"><strong>Sender Account:</strong> naviora.pvt@gmail.com</p>
-        <p style="margin: 2px 0 0 0;"><strong>Recipient Inbox:</strong> navioraa.technology@gmail.com</p>
-        <p style="margin: 6px 0 0 0; color: #94A3B8;">This email was automatically generated and dispatched upon submission of the NAVIORAA enquiry form.</p>
+      <!-- Footer Note -->
+      <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #E2E8F0; font-size: 11px; color: #64748B; line-height: 1.5;">
+        <p style="margin: 0;">This email was generated from the NAVIORAA official website enquiry form.</p>
+        <p style="margin: 2px 0 0 0;">For urgent admissions questions: Call +91 9890187383 or email naviora.pvt@gmail.com.</p>
       </div>
     </div>
   `;
 
-  // Dispatch email with replyTo set to the applicant
+  // Dispatch email with replyTo set to the applicant and multi-part plainText
   const delivery = await sendNotificationEmail(emailSubject, emailHtml, {
     replyTo: `${fullName.trim()} <${email.trim()}>`,
+    plainText: plainTextBody,
   });
 
   if (!delivery.sent) {

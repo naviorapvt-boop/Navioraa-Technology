@@ -333,11 +333,11 @@ export const AdminEnquiries: React.FC = () => {
                     className="w-full h-10 px-3 rounded-xl border border-border-medium bg-white text-xs text-on-surface"
                   >
                     <option value="">Unassigned</option>
-                    <option value="Disha (Admissions Lead)">Disha (Marketing & Admissions Lead)</option>
-                    <option value="Sandip (Training Head)">Sandip (Head of Training)</option>
-                    <option value="Sakshi (Tech Lead)">Sakshi (Technical & Project Lead)</option>
-                    <option value="Chaitanya (Operations)">Chaitanya (Operations Lead)</option>
-                    <option value="Shubham (Founder)">Shubham (Founder & CEO)</option>
+                    <option value="Admissions Counselor">Admissions Counseling Desk</option>
+                    <option value="Academic Curriculum Lead">Academic Curriculum Lead</option>
+                    <option value="Technical Project Lead">Technical & Project Engineering Lead</option>
+                    <option value="Student Operations">Student Operations Desk</option>
+                    <option value="Executive Advisory">Executive Advisory Office</option>
                   </select>
                 </div>
 

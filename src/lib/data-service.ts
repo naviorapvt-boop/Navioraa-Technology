@@ -522,7 +522,20 @@ export async function getBlogPosts(publishedOnly = true): Promise<BlogPost[]> {
     if (snap.empty && publishedOnly) {
       return INITIAL_BLOG_POSTS.map((b, i) => ({ ...b, id: `seed-blog-${i}` }));
     }
-    return snap.docs.map(d => ({ ...d.data(), id: d.id } as BlogPost));
+    return snap.docs.map(d => {
+      const postData = d.data() as BlogPost;
+      const rawAuthor = postData.author || '';
+      const cleanAuthor = (rawAuthor.toLowerCase().includes('sakshi') || rawAuthor.toLowerCase().includes('sandip'))
+        ? 'NAVIORAA Technical Faculty'
+        : (rawAuthor || 'NAVIORAA Technical Faculty');
+
+      let coverImage = postData.coverImage || '';
+      if (!coverImage || coverImage.includes('photo-1677442136019-21780efad99a') || postData.slug === 'applied-ai-llm-rag-systems') {
+        coverImage = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&auto=format&fit=crop&q=80';
+      }
+
+      return { ...postData, author: cleanAuthor, coverImage, id: d.id };
+    });
   } catch (error) {
     return INITIAL_BLOG_POSTS.map((b, i) => ({ ...b, id: `seed-blog-${i}` }));
   }
@@ -532,9 +545,15 @@ export async function saveBlogPost(post: Partial<BlogPost> & { id?: string }): P
   const colRef = collection(db, 'blogPosts');
   const docRef = post.id ? doc(colRef, post.id) : doc(colRef);
   const now = new Date().toISOString();
+  const rawAuthor = post.author || '';
+  const cleanAuthor = (rawAuthor.toLowerCase().includes('sakshi') || rawAuthor.toLowerCase().includes('sandip'))
+    ? 'NAVIORAA Technical Faculty'
+    : (rawAuthor || 'NAVIORAA Technical Faculty');
+
   const data = sanitizeForFirestore({
     ...post,
     id: docRef.id,
+    author: cleanAuthor,
     published: post.published ?? true,
     updatedAt: now,
     createdAt: post.createdAt || now,
@@ -577,6 +596,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         ...data,
         contactPhone,
         whatsappNumber,
+        address: '', // Strict requirement: remove address completely across the site
       };
     }
     return INITIAL_SITE_SETTINGS;

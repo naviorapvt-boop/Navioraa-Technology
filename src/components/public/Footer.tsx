@@ -9,9 +9,26 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ settings }) => {
   const currentYear = new Date().getFullYear();
+  const [emailCopied, setEmailCopied] = React.useState(false);
+
+  const emailAddress = settings?.contactEmail || 'naviora.pvt@gmail.com';
 
   const handleLinkClick = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
+
+  const handleMailClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    try {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(emailAddress).catch(() => {});
+      }
+    } catch {
+      // ignore
+    }
+    setEmailCopied(true);
+    setTimeout(() => setEmailCopied(false), 2500);
+    // Explicitly navigate to mailto: in addition to default anchor behavior
+    window.location.href = `mailto:${emailAddress}`;
   };
 
   return (
@@ -43,13 +60,22 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                 <span className="material-symbols-outlined text-[16px]">chat</span>
                 <span>WhatsApp</span>
               </a>
-              <a
-                href={`mailto:${settings?.contactEmail || 'naviora.pvt@gmail.com'}`}
-                className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors font-medium"
-              >
-                <span className="material-symbols-outlined text-[16px] text-[#00D2FF]">mail</span>
-                <span>{settings?.contactEmail || 'naviora.pvt@gmail.com'}</span>
-              </a>
+              <div className="relative inline-block">
+                <a
+                  href={`mailto:${emailAddress}`}
+                  onClick={handleMailClick}
+                  title="Click to email naviora.pvt@gmail.com"
+                  className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors font-medium cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[16px] text-[#00D2FF]">mail</span>
+                  <span>{emailAddress}</span>
+                </a>
+                {emailCopied && (
+                  <span className="absolute -top-7 left-0 px-2 py-0.5 bg-[#00D2FF] text-slate-950 text-[10px] font-bold rounded shadow-md whitespace-nowrap">
+                    Mail opened · Copied to clipboard!
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

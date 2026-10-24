@@ -95,10 +95,6 @@ export const HomePage: React.FC = () => {
     }
   };
 
-  const handleOpenResource = (res: ResourceItem) => {
-    alert(`Resource "${res.title}" (${res.fileFormat}) download link accessed.`);
-  };
-
   // Filter courses based on Category, Audience, and Search Query
   const filteredCourses = courses.filter((c) => {
     if (selectedCategory !== 'all' && c.category.toLowerCase() !== selectedCategory.toLowerCase()) {
@@ -207,7 +203,7 @@ export const HomePage: React.FC = () => {
       <ResourcesSection
         resources={resources}
         blogPosts={blogPosts}
-        onOpenResource={handleOpenResource}
+        onEnquire={handleEnquireCourse}
       />
 
       {/* Enquiry Form */}

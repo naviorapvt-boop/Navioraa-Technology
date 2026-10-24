@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Course } from '../../lib/types';
+import { TOPIC_NOTES, downloadSyllabusFile } from '../../lib/syllabus-data';
 
 interface CourseDetailModalProps {
   course: Course | null;
@@ -8,7 +9,27 @@ interface CourseDetailModalProps {
 }
 
 export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, onClose, onEnquire }) => {
+  const [downloadNotice, setDownloadNotice] = useState<string | null>(null);
+
   if (!course) return null;
+
+  const handleDownload = () => {
+    const slug = course.slug || '';
+    const title = course.title.toLowerCase();
+    const note = TOPIC_NOTES.find((n) => 
+      n.slug === slug || 
+      n.slug.includes(slug) || 
+      title.includes(n.category.toLowerCase()) || 
+      title.includes('python') && n.slug.includes('python') ||
+      title.includes('mern') && n.slug.includes('mern') ||
+      title.includes('ai') && n.slug.includes('ai') ||
+      title.includes('data') && n.slug.includes('data')
+    ) || TOPIC_NOTES[0];
+
+    downloadSyllabusFile(note);
+    setDownloadNotice(`Downloaded "${course.title}" Syllabus!`);
+    setTimeout(() => setDownloadNotice(null), 3000);
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-fade-in">
@@ -50,6 +71,14 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
           </div>
         </div>
 
+        {/* Notice Banner */}
+        {downloadNotice && (
+          <div className="px-6 py-2.5 bg-emerald-50 border-b border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+            <span className="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+            <span>{downloadNotice}</span>
+          </div>
+        )}
+
         {/* Modal Content Scrollable Area */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {/* Overview */}
@@ -82,9 +111,19 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
           {/* Detailed Syllabus */}
           {course.syllabus && course.syllabus.length > 0 && (
             <div>
-              <h3 className="font-heading font-bold text-sm text-primary uppercase tracking-wider mb-3">
-                Comprehensive Curriculum Syllabus
-              </h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-heading font-bold text-sm text-primary uppercase tracking-wider">
+                  Comprehensive Curriculum Syllabus
+                </h3>
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  className="text-xs text-[#0052FF] font-bold hover:underline inline-flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-[15px]">download</span>
+                  <span>Download Syllabus</span>
+                </button>
+              </div>
               <div className="space-y-3">
                 {course.syllabus.map((mod, idx) => (
                   <div key={idx} className="p-3.5 rounded-xl bg-surface-subtle border border-border-subtle">
@@ -129,13 +168,18 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
 
         {/* Modal Footer Actions */}
         <div className="p-4 border-t border-border-subtle bg-surface-subtle flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-xs text-text-muted hidden sm:block">
-            <span>Faculty counseling & curriculum guidance included</span>
-          </div>
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="w-full sm:w-auto h-11 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs"
+          >
+            <span className="material-symbols-outlined text-[16px]">download</span>
+            <span>Download Full Syllabus</span>
+          </button>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={onClose}
-              className="flex-1 sm:flex-none h-11 px-5 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors"
+              className="flex-1 sm:flex-none h-11 px-4 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors"
             >
               Close
             </button>
@@ -144,9 +188,9 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
                 onClose();
                 onEnquire(course.title);
               }}
-              className="flex-1 sm:flex-none h-11 px-6 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+              className="flex-1 sm:flex-none h-11 px-5 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
             >
-              <span>Enquire About This Program</span>
+              <span>Enquire for Admission</span>
               <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
           </div>
@@ -155,3 +199,4 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
     </div>
   );
 };
+

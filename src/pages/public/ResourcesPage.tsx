@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getResources, getBlogPosts } from '../../lib/data-service';
 import { ResourceItem, BlogPost } from '../../lib/types';
 import { ResourcesSection } from '../../components/public/ResourcesSection';
@@ -6,6 +7,7 @@ import { ResourcesSection } from '../../components/public/ResourcesSection';
 export const ResourcesPage: React.FC = () => {
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function load() {
@@ -16,18 +18,22 @@ export const ResourcesPage: React.FC = () => {
     load();
   }, []);
 
+  const handleEnquire = (topic: string) => {
+    navigate(`/#enquiry-form?program=${encodeURIComponent(topic)}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <section className="bg-gradient-to-b from-primary-light/50 via-white to-surface px-4 py-16 border-b border-border-subtle text-center">
         <div className="max-w-3xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary-light px-3.5 py-1 rounded-full">
-            Knowledge Base
+          <span className="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3.5 py-1 rounded-full">
+            Technical Knowledge Base
           </span>
           <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-on-surface mt-3">
-            Open Educational Resources & Technical Articles
+            Downloadable Syllabi, Notes & Technical Articles
           </h1>
           <p className="text-sm sm:text-base text-on-surface-variant mt-3 leading-relaxed">
-            Free developer handbooks, interview cheat sheets, starter repositories, and insightful tech articles.
+            Free developer syllabi, interview notes, starter architectures, and in-depth tech articles for students and inquirers.
           </p>
         </div>
       </section>
@@ -35,9 +41,7 @@ export const ResourcesPage: React.FC = () => {
       <ResourcesSection
         resources={resources}
         blogPosts={blogPosts}
-        onOpenResource={(res) => {
-          alert(`Downloading resource: ${res.title} (${res.fileFormat})`);
-        }}
+        onEnquire={handleEnquire}
       />
     </div>
   );
