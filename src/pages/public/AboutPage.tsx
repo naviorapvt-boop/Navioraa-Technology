@@ -1,15 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { getTeamMembers } from '../../lib/data-service';
-import { TeamMember } from '../../lib/types';
-import { TeamSection } from '../../components/public/TeamSection';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const AboutPage: React.FC = () => {
-  const [team, setTeam] = useState<TeamMember[]>([]);
-
-  useEffect(() => {
-    getTeamMembers(true).then(setTeam);
-  }, []);
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Banner */}
@@ -82,8 +74,34 @@ export const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Leadership Team */}
-      <TeamSection members={team} />
+      {/* Call to Action */}
+      <section className="px-4 py-16 bg-white text-center">
+        <div className="max-w-2xl mx-auto space-y-5">
+          <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-on-surface">
+            Ready to Build Your Engineering Career?
+          </h2>
+          <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Explore our curriculum tracks or talk to an academic mentor today to map out your technical trajectory.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              to="/courses"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
+              className="h-10 px-5 rounded-full bg-primary hover:bg-primary-dark text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
+            >
+              <span>Browse All Programs</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </Link>
+            <Link
+              to="/contact"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
+              className="h-10 px-5 rounded-full bg-surface-subtle hover:bg-primary-light text-primary border border-primary/25 text-xs font-bold flex items-center gap-2 transition-all"
+            >
+              <span>Contact Admissions</span>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

@@ -8,7 +8,7 @@ interface ServicesSectionProps {
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ services, onConsult }) => {
   return (
-    <section className="px-4 py-12 bg-surface-subtle border-b border-border-subtle" id="services">
+    <section className="px-4 py-12 bg-surface-subtle border-b border-border-subtle scroll-mt-20" id="services">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3.5 py-1 rounded-full">

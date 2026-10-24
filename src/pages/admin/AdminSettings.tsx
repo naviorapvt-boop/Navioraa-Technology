@@ -69,9 +69,10 @@ export const AdminSettings: React.FC = () => {
       });
       const data = await res.json();
       if (res.ok && data.success) {
+        const noteSuffix = data.note ? ` Note: ${data.note}.` : '';
         setTestEmailStatus({
           success: true,
-          message: `Live test email dispatched successfully via ${data.provider.toUpperCase()} to ${data.recipient}. (Message ID: ${data.messageId})`,
+          message: `Live test email dispatched successfully via ${data.provider.toUpperCase()} to ${data.recipient}.${noteSuffix} (Message ID: ${data.messageId})`,
         });
       } else {
         setTestEmailStatus({

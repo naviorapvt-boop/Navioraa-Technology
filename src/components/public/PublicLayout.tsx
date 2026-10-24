@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { ScrollToTop } from './ScrollToTop';
 import { getSiteSettings } from '../../lib/data-service';
 import { SiteSettings } from '../../lib/types';
 
@@ -14,11 +15,14 @@ export const PublicLayout: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-surface selection:bg-primary-light selection:text-primary">
+      {/* Scroll restoration helper: ensures clicking any nav item or route scrolls directly to top */}
+      <ScrollToTop />
+
       {/* Sticky Header */}
       <Header />
 
       {/* Main Routed Page Content */}
-      <main className="flex-1 pt-16 pb-16 md:pb-0">
+      <main className="flex-1 pt-16 sm:pt-18 pb-16 md:pb-0">
         <Outlet />
       </main>
 
@@ -27,6 +31,7 @@ export const PublicLayout: React.FC = () => {
         <div className="flex justify-around items-center h-16 px-2">
           <Link
             to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-primary font-bold"
           >
             <span className="material-symbols-outlined text-[20px]">home</span>
@@ -35,6 +40,7 @@ export const PublicLayout: React.FC = () => {
 
           <Link
             to="/courses"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-slate-500 hover:text-primary font-medium"
           >
             <span className="material-symbols-outlined text-[20px]">menu_book</span>
@@ -43,6 +49,7 @@ export const PublicLayout: React.FC = () => {
 
           <Link
             to="/projects"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-slate-500 hover:text-primary font-medium"
           >
             <span className="material-symbols-outlined text-[20px]">terminal</span>

@@ -104,7 +104,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
   };
 
   return (
-    <section className="px-4 py-12 bg-surface-subtle" id="enquiry-form">
+    <section className="px-4 py-12 bg-surface-subtle scroll-mt-20" id="enquiry-form">
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-8">
           <span className="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3.5 py-1 rounded-full">

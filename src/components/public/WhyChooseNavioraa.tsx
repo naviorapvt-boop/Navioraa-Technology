@@ -7,7 +7,7 @@ interface WhyChooseNavioraaProps {
 
 export const WhyChooseNavioraa: React.FC<WhyChooseNavioraaProps> = ({ items }) => {
   return (
-    <section className="px-4 py-12 bg-white border-b border-border-subtle" id="why-navioraa">
+    <section className="px-4 py-12 bg-white border-b border-border-subtle scroll-mt-20" id="why-navioraa">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary-light px-3.5 py-1 rounded-full">

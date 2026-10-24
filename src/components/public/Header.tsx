@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavioraaLogo } from './NavioraaLogo';
 
 interface HeaderProps {
   onOpenEnquiry?: (courseName?: string) => void;
@@ -9,58 +10,91 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => location.pathname === path;
 
+  // Navigates and guarantees that the page content scrolls directly to the top
+  const handleNavClick = (path: string, e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    setMobileMenuOpen(false);
+    setCoursesDropdownOpen(false);
+
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    } else {
+      navigate(path);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  };
+
+  const handleEnquireClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    setCoursesDropdownOpen(false);
+
+    if (location.pathname === '/') {
+      const el = document.getElementById('enquiry-form');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      onOpenEnquiry?.();
+    } else {
+      navigate('/#enquiry-form');
+    }
+  };
+
   return (
     <>
-      <header className="fixed top-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-border-subtle shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
-        <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-border-subtle shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
+        <div className="max-w-7xl mx-auto h-16 sm:h-18 px-3 sm:px-6 flex items-center justify-between gap-3 lg:gap-4">
+          {/* Left: Mobile Menu Toggle & Brand Vector Logo */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <button
+              type="button"
               aria-label="Open Navigation Menu"
-              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-subtle active:scale-95 transition-all"
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-subtle active:scale-95 transition-all"
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="material-symbols-outlined text-[24px]">menu</span>
             </button>
-            <Link to="/" className="flex items-center gap-2.5 min-w-0 group">
-              <img
-                src="https://lh3.googleusercontent.com/aida/AEtjO1WvXapdEnMeltY8iU9JwLdNKOOhH7ol8heGxaeDchiHMIQiUDUyAuHcuck53FXh1wQZvsQ_KMJHLuP9j-hYcpx4NjKm43K4yXHYRfZ7Hr7jgG_Sf4z888BGGW993BnVKCLGDXqlrJ748xu2l9Ip1YsAWTfk7IkPQJVfnkCMNvZzGqwTVaSacqoNkCcMFJ0cXECpzLvUGq0ESurWQ7xF9ukcpKDb0t1mtDoh8wHgUzc3mCIbW9z4y2U_RVO8"
-                alt="NAVIORAA Logo"
-                className="h-9 w-auto object-contain flex-shrink-0 group-hover:scale-105 transition-transform"
-              />
-              <div className="flex flex-col min-w-0">
-                <span className="font-heading font-extrabold text-[17px] text-primary tracking-tight leading-none">
-                  NAVIORAA
-                </span>
-                <span className="text-[10px] uppercase font-bold text-secondary tracking-wider mt-0.5 leading-none">
-                  IT Institute & Tech Labs
-                </span>
-              </div>
+
+            {/* Seamless vector logo styled specifically for light navbar UI */}
+            <Link
+              to="/"
+              onClick={(e) => handleNavClick('/', e)}
+              className="flex items-center group flex-shrink-0 py-1"
+              title="NAVIORAA - Innovation Beyond Tomorrow"
+            >
+              <NavioraaLogo variant="light" size="md" />
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-            <Link
-              to="/"
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 flex-1 justify-center max-w-2xl">
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/', e)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                isActive('/')
+                  ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                  : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
               }`}
             >
               Home
-            </Link>
+            </button>
 
-            <Link
-              to="/about"
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/about', e)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/about') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                isActive('/about')
+                  ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                  : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
               }`}
             >
               About
-            </Link>
+            </button>
 
             {/* Courses Dropdown */}
             <div
@@ -68,130 +102,155 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
               onMouseEnter={() => setCoursesDropdownOpen(true)}
               onMouseLeave={() => setCoursesDropdownOpen(false)}
             >
-              <Link
-                to="/courses"
+              <button
+                type="button"
+                onClick={(e) => handleNavClick('/courses', e)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 transition-colors ${
-                  isActive('/courses') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                  isActive('/courses')
+                    ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                    : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
                 }`}
               >
                 <span>Courses</span>
                 <span className="material-symbols-outlined text-[16px]">expand_more</span>
-              </Link>
+              </button>
 
               {coursesDropdownOpen && (
                 <div className="absolute top-full left-0 w-64 pt-2 z-50">
                   <div className="bg-white rounded-2xl p-2 border border-border-subtle shadow-xl space-y-1">
-                    <Link
-                      to="/courses?cat=full-stack-development"
-                      className="block px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCoursesDropdownOpen(false);
+                        navigate('/courses?cat=full-stack-development');
+                        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
                     >
                       <p className="font-bold">Full Stack Engineering</p>
                       <p className="text-[11px] text-text-muted">Python & MERN Architectures</p>
-                    </Link>
-                    <Link
-                      to="/courses?cat=artificial-intelligence"
-                      className="block px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCoursesDropdownOpen(false);
+                        navigate('/courses?cat=artificial-intelligence');
+                        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
                     >
                       <p className="font-bold">AI & Machine Learning</p>
                       <p className="text-[11px] text-text-muted">Deep Learning & LLM Systems</p>
-                    </Link>
-                    <Link
-                      to="/courses?cat=data-analytics"
-                      className="block px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCoursesDropdownOpen(false);
+                        navigate('/courses?cat=data-analytics');
+                        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
                     >
                       <p className="font-bold">Data Analytics & BI</p>
                       <p className="text-[11px] text-text-muted">Power BI, SQL & Python</p>
-                    </Link>
-                    <Link
-                      to="/courses?cat=programming"
-                      className="block px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCoursesDropdownOpen(false);
+                        navigate('/courses?cat=programming');
+                        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-subtle hover:text-primary"
                     >
                       <p className="font-bold">Core Programming</p>
                       <p className="text-[11px] text-text-muted">Python, Java & Data Structures</p>
-                    </Link>
+                    </button>
+
                     <div className="pt-1 border-t border-border-subtle">
-                      <Link
-                        to="/courses"
-                        className="block px-3 py-1.5 text-center text-xs font-bold text-primary hover:underline"
+                      <button
+                        type="button"
+                        onClick={(e) => handleNavClick('/courses', e)}
+                        className="w-full text-center px-3 py-1.5 text-xs font-bold text-primary hover:underline"
                       >
-                        Explore All 24+ Programs →
-                      </Link>
+                        Explore All Programs →
+                      </button>
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            <Link
-              to="/services"
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/services', e)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/services') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                isActive('/services')
+                  ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                  : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
               }`}
             >
               Services
-            </Link>
+            </button>
 
-            <Link
-              to="/projects"
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/projects', e)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/projects') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                isActive('/projects')
+                  ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                  : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
               }`}
             >
               Projects
-            </Link>
+            </button>
 
-            <Link
-              to="/team"
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/resources', e)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/team') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
-              }`}
-            >
-              Team
-            </Link>
-
-            <Link
-              to="/resources"
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/resources') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                isActive('/resources')
+                  ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                  : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
               }`}
             >
               Resources & Blog
-            </Link>
+            </button>
 
-            <Link
-              to="/contact"
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/contact', e)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                isActive('/contact') ? 'text-primary bg-primary-light' : 'text-on-surface-variant hover:text-primary hover:bg-surface-subtle'
+                isActive('/contact')
+                  ? 'text-[#0052FF] bg-[#0052FF]/10 font-bold'
+                  : 'text-on-surface-variant hover:text-[#0052FF] hover:bg-surface-subtle'
               }`}
             >
               Contact
-            </Link>
+            </button>
           </nav>
 
-          {/* Quick CTA Actions */}
-          <div className="flex items-center gap-2.5">
-            <Link
-              to="/courses"
-              className="hidden sm:inline-flex h-9 px-4 rounded-full bg-white hover:bg-surface-subtle text-primary border border-primary/30 text-xs font-semibold items-center justify-center transition-all active:scale-95 shadow-xs"
+          {/* Right Action CTA Buttons: Clean, clearly visible, styled with logo palette */}
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+            <button
+              type="button"
+              onClick={(e) => handleNavClick('/courses', e)}
+              className="hidden sm:inline-flex h-9 px-3.5 lg:px-4 rounded-full bg-slate-50 hover:bg-[#0052FF]/10 text-[#0052FF] border border-[#0052FF]/25 text-xs font-bold items-center justify-center transition-all active:scale-95 shadow-2xs hover:border-[#0052FF]/40 whitespace-nowrap"
             >
               Explore Courses
-            </Link>
-            <a
-              href="#enquiry-form"
-              onClick={(e) => {
-                if (location.pathname !== '/') {
-                  // If on other page, allow standard link to /#enquiry-form
-                } else {
-                  e.preventDefault();
-                  document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth' });
-                  onOpenEnquiry?.();
-                }
-              }}
-              className="h-9 px-4 rounded-full bg-primary hover:bg-primary-dark text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-95"
+            </button>
+
+            <button
+              type="button"
+              onClick={handleEnquireClick}
+              className="h-9 px-3.5 sm:px-4 rounded-full bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] hover:from-[#0047E0] hover:to-[#008FE6] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm shadow-blue-500/25 hover:shadow-md hover:shadow-blue-500/35 transition-all active:scale-95 whitespace-nowrap"
             >
               <span>Enquire Now</span>
               <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -210,16 +269,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
+        {/* Drawer Header: Clean vector logo suited for UI */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-border-subtle bg-surface-subtle">
-          <div className="flex items-center gap-2">
-            <img
-              src="https://lh3.googleusercontent.com/aida/AEtjO1WvXapdEnMeltY8iU9JwLdNKOOhH7ol8heGxaeDchiHMIQiUDUyAuHcuck53FXh1wQZvsQ_KMJHLuP9j-hYcpx4NjKm43K4yXHYRfZ7Hr7jgG_Sf4z888BGGW993BnVKCLGDXqlrJ748xu2l9Ip1YsAWTfk7IkPQJVfnkCMNvZzGqwTVaSacqoNkCcMFJ0cXECpzLvUGq0ESurWQ7xF9ukcpKDb0t1mtDoh8wHgUzc3mCIbW9z4y2U_RVO8"
-              alt="NAVIORAA Logo"
-              className="h-7 w-auto object-contain"
-            />
-            <span className="font-heading font-extrabold text-primary text-base tracking-tight">NAVIORAA</span>
-          </div>
+          <Link
+            to="/"
+            onClick={(e) => handleNavClick('/', e)}
+            className="flex items-center"
+          >
+            <NavioraaLogo variant="light" size="sm" />
+          </Link>
+
           <button
+            type="button"
             aria-label="Close Drawer"
             className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-200"
             onClick={() => setMobileMenuOpen(false)}
@@ -228,117 +289,108 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
           </button>
         </div>
 
-        <div className="p-4 border-b border-border-subtle bg-white">
-          <Link
-            to="/courses"
-            className="w-full h-11 bg-primary text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-sm"
-            onClick={() => setMobileMenuOpen(false)}
+        {/* Quick CTA inside drawer with brand colors */}
+        <div className="p-4 border-b border-border-subtle bg-white space-y-2">
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/courses', e)}
+            className="w-full h-11 bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">school</span>
             <span>Explore All Courses</span>
-          </Link>
+          </button>
+          <button
+            type="button"
+            onClick={handleEnquireClick}
+            className="w-full h-10 bg-slate-50 hover:bg-[#0052FF]/10 text-[#0052FF] border border-[#0052FF]/20 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
+          >
+            <span>Admission Enquiry</span>
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+          </button>
         </div>
 
+        {/* Mobile Navigation Links */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          <Link
-            to="/"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold ${
-              isActive('/') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">home</span>
             <span>Home</span>
-          </Link>
+          </button>
 
-          <Link
-            to="/about"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/about') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/about', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/about') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">info</span>
             <span>About Navioraa</span>
-          </Link>
+          </button>
 
-          <Link
-            to="/courses"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/courses') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/courses', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/courses') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">menu_book</span>
-            <span>Programs & Syllabi</span>
-          </Link>
+            <span>Courses & Syllabi</span>
+          </button>
 
-          <Link
-            to="/services"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/services') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/services', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/services') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">integration_instructions</span>
             <span>Enterprise Services</span>
-          </Link>
+          </button>
 
-          <Link
-            to="/projects"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/projects') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/projects', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/projects') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">terminal</span>
             <span>Student & Client Projects</span>
-          </Link>
+          </button>
 
-          <Link
-            to="/team"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/team') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/resources', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/resources') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <span className="material-symbols-outlined text-[20px]">groups</span>
-            <span>Faculty & Mentors</span>
-          </Link>
-
-          <Link
-            to="/resources"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/resources') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
-            }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">folder_data</span>
-            <span>Free Study Notes</span>
-          </Link>
+            <span>Resources & Study Notes</span>
+          </button>
 
-          <Link
-            to="/contact"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-              isActive('/contact') ? 'bg-primary-light text-primary' : 'text-on-surface-variant hover:bg-surface-subtle'
+          <button
+            type="button"
+            onClick={(e) => handleNavClick('/contact', e)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors text-left ${
+              isActive('/contact') ? 'bg-[#0052FF]/10 text-[#0052FF] font-bold' : 'text-on-surface-variant hover:bg-surface-subtle'
             }`}
-            onClick={() => setMobileMenuOpen(false)}
           >
             <span className="material-symbols-outlined text-[20px]">support_agent</span>
             <span>Contact & Enquiries</span>
-          </Link>
+          </button>
         </nav>
 
-        <div className="p-4 border-t border-border-subtle bg-surface-subtle">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">
-              NV
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-bold text-on-surface truncate">NAVIORAA Institute</p>
-              <p className="text-[11px] text-text-muted truncate">Learn. Build. Create. Grow.</p>
-            </div>
-          </div>
+        <div className="p-3 border-t border-border-subtle bg-surface-subtle text-center">
+          <p className="text-[11px] text-text-muted">NAVIORAA IT Institute & Tech Labs</p>
         </div>
       </aside>
     </>

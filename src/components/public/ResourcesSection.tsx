@@ -13,7 +13,7 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({
   onOpenResource,
 }) => {
   return (
-    <section className="px-4 py-12 bg-white border-b border-border-subtle" id="resources">
+    <section className="px-4 py-12 bg-white border-b border-border-subtle scroll-mt-20" id="resources">
       <div className="max-w-6xl mx-auto space-y-12">
         {/* Study Notes & Guides */}
         <div>

@@ -6,7 +6,6 @@ import {
   getWhyChooseUs,
   getServices,
   getProjects,
-  getTeamMembers,
   getResources,
   getBlogPosts,
   getSiteSettings,
@@ -18,7 +17,6 @@ import {
   WhyChooseUsItem,
   ServiceItem,
   ProjectItem,
-  TeamMember,
   ResourceItem,
   BlogPost,
   SiteSettings,
@@ -30,7 +28,6 @@ import { CourseDetailModal } from '../../components/public/CourseDetailModal';
 import { WhyChooseNavioraa } from '../../components/public/WhyChooseNavioraa';
 import { ServicesSection } from '../../components/public/ServicesSection';
 import { ProjectsSection } from '../../components/public/ProjectsSection';
-import { TeamSection } from '../../components/public/TeamSection';
 import { ResourcesSection } from '../../components/public/ResourcesSection';
 import { ContactEnquirySection } from '../../components/public/ContactEnquirySection';
 
@@ -41,7 +38,6 @@ export const HomePage: React.FC = () => {
   const [whyChooseItems, setWhyChooseItems] = useState<WhyChooseUsItem[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -62,7 +58,6 @@ export const HomePage: React.FC = () => {
         sWhy,
         sServices,
         sProjects,
-        sTeam,
         sResources,
         sBlog,
         sSettings,
@@ -73,7 +68,6 @@ export const HomePage: React.FC = () => {
         getWhyChooseUs(true),
         getServices(true),
         getProjects(true),
-        getTeamMembers(true),
         getResources(true),
         getBlogPosts(true),
         getSiteSettings(),
@@ -85,7 +79,6 @@ export const HomePage: React.FC = () => {
       setWhyChooseItems(sWhy);
       setServices(sServices);
       setProjects(sProjects);
-      setTeamMembers(sTeam);
       setResources(sResources);
       setBlogPosts(sBlog);
       setSettings(sSettings);
@@ -136,7 +129,7 @@ export const HomePage: React.FC = () => {
       <HeroCarousel slides={slides} />
 
       {/* Courses Discovery Section (Disha-inspired) */}
-      <section className="px-4 py-12 bg-white border-b border-border-subtle" id="courses-catalog">
+      <section className="px-4 py-12 bg-white border-b border-border-subtle scroll-mt-20" id="courses-catalog">
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="text-center max-w-xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-soft px-3.5 py-1 rounded-full">
@@ -209,9 +202,6 @@ export const HomePage: React.FC = () => {
         projects={projects}
         onEnquire={handleEnquireCourse}
       />
-
-      {/* Mentors & Faculty Leadership */}
-      <TeamSection members={teamMembers} />
 
       {/* Learning Resources & Tech Articles */}
       <ResourcesSection

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getCourses, getCategories } from '../../lib/data-service';
 import { Course, CourseCategory } from '../../lib/types';
 import { CourseCategoryFilter } from '../../components/public/CourseCategoryFilter';
@@ -15,6 +15,7 @@ export const CoursesPage: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function load() {
@@ -37,8 +38,8 @@ export const CoursesPage: React.FC = () => {
     load();
   }, [searchParams]);
 
-  const handleEnquire = (courseTitle: string) => {
-    window.location.href = `/#enquiry-form`;
+  const handleEnquire = (_courseTitle: string) => {
+    navigate('/#enquiry-form');
   };
 
   const filteredCourses = courses.filter((c) => {

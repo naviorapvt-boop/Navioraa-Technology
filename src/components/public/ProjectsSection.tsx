@@ -11,7 +11,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects, onEn
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
   return (
-    <section className="px-4 py-12 bg-white border-b border-border-subtle" id="projects">
+    <section className="px-4 py-12 bg-white border-b border-border-subtle scroll-mt-20" id="projects">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary-light px-3.5 py-1 rounded-full">
