@@ -55,10 +55,22 @@ export const ContactPage: React.FC = () => {
               <span className="material-symbols-outlined text-[24px]">call</span>
             </span>
             <h3 className="font-heading font-bold text-base text-on-surface mb-1">Phone & WhatsApp</h3>
-            <p className="text-xs text-on-surface-variant font-medium">
-              {settings?.contactPhone || '+91 98765 43210'}
-            </p>
-            <p className="text-[11px] text-text-muted mt-1">Mon - Sat: 9:00 AM - 7:00 PM IST</p>
+            <a
+              href={`tel:${(settings?.contactPhone || '+919890187383').replace(/\s+/g, '')}`}
+              className="text-xs text-primary font-bold hover:underline"
+            >
+              {settings?.contactPhone || '+91 9890187383'}
+            </a>
+            <a
+              href={`https://wa.me/${(settings?.whatsappNumber || '+919890187383').replace(/[^0-9]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[11px] text-[#1EBE5D] font-bold mt-1.5 hover:underline"
+            >
+              <span>Direct WhatsApp Chat</span>
+              <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+            </a>
+            <p className="text-[11px] text-text-muted mt-1.5">Mon - Sat: 9:00 AM - 7:00 PM IST</p>
           </div>
         </div>
       </section>

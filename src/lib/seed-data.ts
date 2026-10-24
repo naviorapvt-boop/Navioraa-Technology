@@ -675,8 +675,8 @@ export const INITIAL_SITE_SETTINGS: SiteSettings = {
   companyName: 'NAVIORAA Institute of Technology & R&D',
   tagline: 'Learn. Build. Create. Grow.',
   contactEmail: 'naviora.pvt@gmail.com',
-  contactPhone: '+91 98765 43210',
-  whatsappNumber: '+919876543210',
+  contactPhone: '+91 9890187383',
+  whatsappNumber: '+919890187383',
   address: 'Tech Innovation Park, Sector 5, Navi Mumbai & Pune, Maharashtra, India',
   socialLinks: {
     linkedin: 'https://linkedin.com/company/navioraa',

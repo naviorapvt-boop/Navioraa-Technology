@@ -57,7 +57,7 @@ export const PublicLayout: React.FC = () => {
           </Link>
 
           <a
-            href={`https://wa.me/${(settings?.whatsappNumber || '+919876543210').replace(/[^0-9]/g, '')}`}
+            href={`https://wa.me/${(settings?.whatsappNumber || '+919890187383').replace(/[^0-9]/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-12 text-[#25D366] hover:text-[#1EBE5D] font-medium"

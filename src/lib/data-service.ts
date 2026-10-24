@@ -562,7 +562,22 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   try {
     const snap = await getDoc(doc(db, 'siteSettings', 'general'));
     if (snap.exists()) {
-      return snap.data() as SiteSettings;
+      const data = snap.data() as SiteSettings;
+      const contactPhone =
+        !data.contactPhone || data.contactPhone === '+91 98765 43210'
+          ? '+91 9890187383'
+          : data.contactPhone;
+      const whatsappNumber =
+        !data.whatsappNumber || data.whatsappNumber === '+919876543210'
+          ? '+919890187383'
+          : data.whatsappNumber;
+
+      return {
+        ...INITIAL_SITE_SETTINGS,
+        ...data,
+        contactPhone,
+        whatsappNumber,
+      };
     }
     return INITIAL_SITE_SETTINGS;
   } catch (error) {

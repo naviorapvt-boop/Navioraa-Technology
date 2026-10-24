@@ -26,6 +26,31 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
             <p className="text-xs text-slate-400 max-w-md leading-relaxed">
               NAVIORAA is an IT training and technology project development institute committed to modern, hands-on technical pedagogy, production engineering standards, and enterprise client software systems.
             </p>
+            <div className="pt-1 flex flex-wrap items-center gap-4 text-xs">
+              <a
+                href={`tel:${(settings?.contactPhone || '+919890187383').replace(/\s+/g, '')}`}
+                className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors font-medium"
+              >
+                <span className="material-symbols-outlined text-[16px] text-[#00D2FF]">call</span>
+                <span>{settings?.contactPhone || '+91 9890187383'}</span>
+              </a>
+              <a
+                href={`https://wa.me/${(settings?.whatsappNumber || '+919890187383').replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+              >
+                <span className="material-symbols-outlined text-[16px]">chat</span>
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href={`mailto:${settings?.contactEmail || 'naviora.pvt@gmail.com'}`}
+                className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors font-medium"
+              >
+                <span className="material-symbols-outlined text-[16px] text-[#00D2FF]">mail</span>
+                <span>{settings?.contactEmail || 'naviora.pvt@gmail.com'}</span>
+              </a>
+            </div>
           </div>
 
           {/* Programs Navigation */}

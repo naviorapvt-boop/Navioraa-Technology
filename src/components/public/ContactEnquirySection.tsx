@@ -8,7 +8,7 @@ interface ContactEnquirySectionProps {
 
 export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
   initialCourse,
-  whatsappNumber = '+919876543210',
+  whatsappNumber = '+919890187383',
 }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -204,7 +204,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 98901 87383"
                     className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
                   />
                 </div>
