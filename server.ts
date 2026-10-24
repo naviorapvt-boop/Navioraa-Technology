@@ -18,20 +18,17 @@ app.use(express.json());
 function getEmailConfig() {
   const resendApiKey = process.env.RESEND_API_KEY?.trim() || '';
   
-  // Destination inbox: navioraa.technology@gmail.com
+  // Destination inbox: naviora.pvt@gmail.com (the user's email & Resend account address)
   const envRecipient =
     process.env.NOTIFICATION_RECIPIENT?.trim() ||
     process.env.NOTIFICATION_RECIPIENT_EMAIL?.trim();
 
-  const notificationRecipient =
-    envRecipient && envRecipient !== 'naviora.pvt@gmail.com'
-      ? envRecipient
-      : 'navioraa.technology@gmail.com';
+  const notificationRecipient = envRecipient || 'naviora.pvt@gmail.com';
 
-  // Sender address: naviora.pvt@gmail.com
+  // Sender address: Navioraa Admissions
   const emailFrom =
     process.env.EMAIL_FROM?.trim() ||
-    'NAVIORAA Admissions <naviora.pvt@gmail.com>';
+    'Navioraa Admissions <naviora.pvt@gmail.com>';
 
   const smtpUser =
     process.env.SMTP_USER?.trim() ||
@@ -56,8 +53,7 @@ function getEmailConfig() {
   const hasSmtp = Boolean(smtpHost && smtpUser && smtpPass);
   const hasResend = Boolean(resendApiKey);
 
-  // User requirement: Use RESEND_API_KEY as primary email provider.
-  // Use SMTP only if explicitly configured via EMAIL_PROVIDER=smtp or if SMTP is available and Resend is not.
+  // Use RESEND_API_KEY as primary email provider
   let provider: 'resend' | 'smtp' | 'none' = 'none';
   if (emailProviderEnv === 'smtp') {
     provider = hasSmtp ? 'smtp' : 'none';
@@ -73,13 +69,13 @@ function getEmailConfig() {
 
   let resolvedSender = emailFrom;
   if (provider === 'resend') {
-    // Resend requires verified domain or its official testing sender onboarding@resend.dev
+    // Resend free tier uses official testing sender onboarding@resend.dev
     if (resolvedSender.toLowerCase().includes('@gmail.com') || resolvedSender.toLowerCase().includes('@yahoo.com')) {
-      resolvedSender = 'NAVIORAA Admissions <onboarding@resend.dev>';
+      resolvedSender = 'Navioraa Admissions <onboarding@resend.dev>';
     }
   } else if (provider === 'smtp') {
     if (!resolvedSender.includes('<')) {
-      resolvedSender = `NAVIORAA Admissions <${smtpUser}>`;
+      resolvedSender = `Navioraa Admissions <${smtpUser}>`;
     }
   }
 
@@ -137,13 +133,14 @@ async function sendNotificationEmail(
 
   const plainTextContent = options?.plainText || subject;
 
-  // Helper for SMTP dispatch (Delivers genuine, non-spam emails directly via Google Mail infrastructure)
+  // Helper for SMTP dispatch
   const trySmtp = async (targetRecipients: string[]): Promise<EmailResult> => {
     try {
+      const isPort465 = Number(config.smtp.port) === 465;
       const transporter = nodemailer.createTransport({
-        host: config.smtp.host,
-        port: config.smtp.port,
-        secure: config.smtp.secure,
+        host: config.smtp.host || 'smtp.gmail.com',
+        port: Number(config.smtp.port) || (isPort465 ? 465 : 587),
+        secure: isPort465, // true for 465, false for 587 (STARTTLS)
         auth: {
           user: config.smtp.user,
           pass: config.smtp.pass,
@@ -154,18 +151,12 @@ async function sendNotificationEmail(
       const toHeader = uniqueRecipients.join(', ');
 
       const info = await transporter.sendMail({
-        from: `NAVIORAA Admissions <${config.smtp.user}>`,
+        from: `Navioraa Admissions <${config.smtp.user}>`,
         to: toHeader,
         replyTo: options?.replyTo || config.smtp.user,
         subject: subject,
         text: plainTextContent,
         html: htmlBody,
-        headers: {
-          'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          'Auto-Submitted': 'auto-generated',
-          'X-Auto-Response-Suppress': 'OOF, AutoReply',
-          'Precedence': 'bulk',
-        },
       });
 
       return {
@@ -181,24 +172,15 @@ async function sendNotificationEmail(
         sent: false,
         provider: 'smtp',
         error: isBadCredentials
-          ? `Invalid Google SMTP credentials for ${config.smtp.user}. Note: Google requires a 16-character App Password (not your personal account password). Generate one at https://myaccount.google.com/apppasswords and set it in SMTP_PASS.`
+          ? `Google SMTP requires a 16-character App Password (not your account login password). Generate one at https://myaccount.google.com/apppasswords and set in SMTP_PASS.`
           : `SMTP delivery failure: ${errText}`,
       };
     }
   };
 
   // Helper for Resend dispatch
-  const tryResend = async (targetRecipient: string, isFallback: boolean = false): Promise<EmailResult> => {
+  const tryResend = async (targetRecipient: string): Promise<EmailResult> => {
     try {
-      const bodyPayload = isFallback
-        ? `
-          <div style="background-color: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 12px; color: #1E40AF; line-height: 1.5;">
-            <strong>Admissions Notice:</strong> Routed to verified admin account (<code>naviora.pvt@gmail.com</code>). All applicant contact details and query notes are preserved below.<br/>
-          </div>
-          ${htmlBody}
-        `
-        : htmlBody;
-
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -211,10 +193,7 @@ async function sendNotificationEmail(
           reply_to: options?.replyTo || 'naviora.pvt@gmail.com',
           subject: subject,
           text: plainTextContent,
-          html: bodyPayload,
-          headers: {
-            'X-Entity-Ref-ID': `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          },
+          html: htmlBody,
         }),
       });
 
@@ -234,7 +213,6 @@ async function sendNotificationEmail(
         provider: 'resend',
         messageId: responseData.id || 'resend-dispatched',
         recipientDelivered: targetRecipient,
-        note: isFallback ? 'Delivered via Resend to account inbox (naviora.pvt@gmail.com)' : undefined,
       };
     } catch (netErr) {
       return {
@@ -247,30 +225,28 @@ async function sendNotificationEmail(
 
   // 1. Primary: Resend API
   if (config.provider === 'resend') {
-    // Attempt dispatch to designated recipient: navioraa.technology@gmail.com
     let resendResult = await tryResend(config.notificationRecipient);
     if (resendResult.sent) {
       return resendResult;
     }
 
-    // If failed, check if SMTP is available as fallback for 100% genuine delivery
-    if (config.smtp.pass && config.smtp.user) {
-      const smtpRecipients = [config.notificationRecipient];
-      if (config.smtp.user && !smtpRecipients.includes(config.smtp.user)) {
-        smtpRecipients.push(config.smtp.user);
-      }
-      const smtpResult = await trySmtp(smtpRecipients);
-      if (smtpResult.sent) {
-        return smtpResult;
+    // If Resend failed because recipient is not verified on free tier, fall back to owner email
+    if (config.notificationRecipient !== 'naviora.pvt@gmail.com') {
+      console.warn(`[Email Dispatch] Delivery to ${config.notificationRecipient} failed (${resendResult.error}). Attempting fallback to verified account owner naviora.pvt@gmail.com...`);
+      const fallbackResult = await tryResend('naviora.pvt@gmail.com');
+      if (fallbackResult.sent) {
+        return {
+          ...fallbackResult,
+          note: 'Delivered to verified account inbox (naviora.pvt@gmail.com)',
+        };
       }
     }
 
-    // Safe fallback: Deliver via Resend to the verified account owner address (naviora.pvt@gmail.com)
-    // to ensure no applicant enquiry is ever lost
-    if (config.notificationRecipient !== 'naviora.pvt@gmail.com') {
-      const fallbackResult = await tryResend('naviora.pvt@gmail.com', true);
-      if (fallbackResult.sent) {
-        return fallbackResult;
+    // If SMTP is available, try as backup
+    if (config.smtp.pass && config.smtp.user) {
+      const smtpResult = await trySmtp([config.notificationRecipient]);
+      if (smtpResult.sent) {
+        return smtpResult;
       }
     }
 
@@ -291,7 +267,7 @@ async function sendNotificationEmail(
 
     // If SMTP failed (e.g. invalid app password) and Resend is available, try Resend as fallback
     if (config.resendApiKey) {
-      const resendFallback = await tryResend('naviora.pvt@gmail.com', true);
+      const resendFallback = await tryResend('naviora.pvt@gmail.com');
       if (resendFallback.sent) {
         return resendFallback;
       }
@@ -382,6 +358,7 @@ app.post('/api/test-email', async (req: Request, res: Response) => {
 // Enquiry Email Submission Endpoint
 app.post('/api/enquiries', async (req: Request, res: Response) => {
   const { fullName, email, phone, programOrService, message, enquiryId } = req.body;
+  console.log(`[API /api/enquiries] Received enquiry: "${fullName}" <${email}>, Phone: ${phone}, Program: "${programOrService}"`);
 
   // Strict Server-Side Validation
   if (!fullName || typeof fullName !== 'string' || fullName.trim().length === 0) {
@@ -421,7 +398,7 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
   const istTime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'medium' });
 
   // Construct Genuine, Spam-Proof Notification Email
-  const emailSubject = `Course Enquiry: ${programOrService} - ${fullName.trim()}`;
+  const emailSubject = `New Admissions Inquiry: ${fullName.trim()} - ${programOrService}`;
 
   const plainTextBody = [
     `NEW ADMISSION & COURSE ENQUIRY`,
@@ -534,6 +511,14 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
   const delivery = await sendNotificationEmail(emailSubject, emailHtml, {
     replyTo: `${fullName.trim()} <${email.trim()}>`,
     plainText: plainTextBody,
+  });
+
+  console.log(`[API /api/enquiries] Email delivery status:`, {
+    sent: delivery.sent,
+    provider: delivery.provider,
+    recipient: delivery.recipientDelivered || config.notificationRecipient,
+    messageId: delivery.messageId,
+    error: delivery.error,
   });
 
   if (!delivery.sent) {

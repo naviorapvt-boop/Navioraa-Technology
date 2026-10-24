@@ -222,6 +222,20 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                   className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
                 >
                   <option value="" disabled>Select a domain program or service</option>
+                  {programOrService && ![
+                    "Python Full Stack Development",
+                    "Python Programming Essentials",
+                    "Web Development (MERN Stack Engineering)",
+                    "Artificial Intelligence & Machine Learning",
+                    "Data Analytics & Visualization",
+                    "Java Cloud Architecture & Spring Boot",
+                    "Enterprise Web & Cloud Development Services",
+                    "Custom Enterprise Software Development",
+                    "IT & Business Project Development",
+                    "General Academic & Career Consultation"
+                  ].includes(programOrService) && (
+                    <option value={programOrService}>{programOrService}</option>
+                  )}
                   <option value="Python Full Stack Development">Python Full Stack Development</option>
                   <option value="Python Programming">Python Programming Essentials</option>
                   <option value="Web Development (MERN Stack Engineering)">Web Development (MERN Stack)</option>
