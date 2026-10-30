@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="nav-fav-left" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0047E0" />
+      <stop offset="50%" stop-color="#0066FF" />
+      <stop offset="100%" stop-color="#0052FF" />
+    </linearGradient>
+    <linearGradient id="nav-fav-right" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6EE7B7" />
+      <stop offset="35%" stop-color="#2DD4BF" />
+      <stop offset="70%" stop-color="#00D2FF" />
+      <stop offset="100%" stop-color="#0099FF" />
+    </linearGradient>
+    <linearGradient id="nav-fav-diag" x1="10" y1="12" x2="90" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0052FF" />
+      <stop offset="25%" stop-color="#0077FF" />
+      <stop offset="65%" stop-color="#00D2FF" />
+      <stop offset="100%" stop-color="#00F0FF" />
+    </linearGradient>
+    <linearGradient id="nav-fav-shadow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#001845" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#001845" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <!-- 1. Left Vertical Pillar -->
+  <path d="M 18 12 L 32 12 L 32 88 L 18 88 A 8 8 0 0 1 10 80 L 10 20 A 8 8 0 0 1 18 12 Z" fill="url(#nav-fav-left)" />
+  <!-- 2. Right Vertical Pillar -->
+  <path d="M 68 12 L 82 12 A 8 8 0 0 1 90 20 L 90 80 A 8 8 0 0 1 82 88 L 68 88 Z" fill="url(#nav-fav-right)" />
+  <!-- 3. Fold Shadow -->
+  <path d="M 10 20 L 32 45 L 32 55 L 10 30 Z" fill="url(#nav-fav-shadow)" opacity="0.6" />
+  <!-- 4. Diagonal 3D Fold Ribbon -->
+  <path d="M 10 18 A 6 6 0 0 1 18 12 L 32 12 L 90 80 A 8 8 0 0 1 82 88 L 68 88 L 10 22 A 6 6 0 0 1 10 18 Z" fill="url(#nav-fav-diag)" />
+  <!-- 5. Sleek Fold Highlights -->
+  <path d="M 18 12 L 32 12 L 90 80" stroke="#FFFFFF" stroke-width="2.5" stroke-opacity="0.45" stroke-linecap="round" />
+  <path d="M 68 12 L 82 12 A 8 8 0 0 1 90 20" stroke="#FFFFFF" stroke-width="2.2" stroke-opacity="0.55" stroke-linecap="round" />
+</svg>

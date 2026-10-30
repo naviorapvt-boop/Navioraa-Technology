@@ -75,12 +75,6 @@ export const AdminLogin: React.FC = () => {
     }
   };
 
-  const handleQuickFill = () => {
-    setEmail('shubhammahadik3228@gmail.com');
-    setPassword('Harvey@2026');
-    setErrorMsg(null);
-  };
-
   return (
     <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col justify-center items-center p-4 selection:bg-[#0052FF] selection:text-white">
       {/* Background glow effects */}
@@ -115,25 +109,6 @@ export const AdminLogin: React.FC = () => {
               <span>{successMsg}</span>
             </div>
           )}
-
-          {/* Quick Credential Indicator / Auto-fill Pill */}
-          <div className="p-3 rounded-2xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-between gap-3 text-xs">
-            <div className="min-w-0">
-              <span className="text-[10px] uppercase font-bold text-[#00E5FF] tracking-wider block">
-                Primary Super Admin
-              </span>
-              <span className="text-slate-300 font-mono text-[11px] truncate block">
-                shubhammahadik3228@gmail.com
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={handleQuickFill}
-              className="px-2.5 py-1 rounded-lg bg-[#0052FF]/20 hover:bg-[#0052FF]/40 text-[#00E5FF] text-[11px] font-bold border border-[#0052FF]/40 transition-colors flex-shrink-0"
-            >
-              Fill Credentials
-            </button>
-          </div>
 
           {/* Email/Password Form */}
           <form onSubmit={handleEmailLogin} className="space-y-4">
