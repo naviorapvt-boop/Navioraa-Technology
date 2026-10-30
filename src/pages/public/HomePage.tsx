@@ -21,6 +21,17 @@ import {
   BlogPost,
   SiteSettings,
 } from '../../lib/types';
+import {
+  INITIAL_COURSES,
+  INITIAL_CATEGORIES,
+  INITIAL_HERO_SLIDES,
+  INITIAL_WHY_CHOOSE_US,
+  INITIAL_SERVICES,
+  INITIAL_PROJECTS,
+  INITIAL_RESOURCES,
+  INITIAL_BLOG_POSTS,
+  INITIAL_SITE_SETTINGS,
+} from '../../lib/seed-data';
 import { HeroCarousel } from '../../components/public/HeroCarousel';
 import { CourseCategoryFilter } from '../../components/public/CourseCategoryFilter';
 import { CourseCard } from '../../components/public/CourseCard';
@@ -32,15 +43,16 @@ import { ResourcesSection } from '../../components/public/ResourcesSection';
 import { ContactEnquirySection } from '../../components/public/ContactEnquirySection';
 
 export const HomePage: React.FC = () => {
-  const [slides, setSlides] = useState<HeroSlide[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [categories, setCategories] = useState<CourseCategory[]>([]);
-  const [whyChooseItems, setWhyChooseItems] = useState<WhyChooseUsItem[]>([]);
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
-  const [resources, setResources] = useState<ResourceItem[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  // Pre-seed state so the landing page renders in 0ms without waiting for network requests
+  const [slides, setSlides] = useState<HeroSlide[]>(() => INITIAL_HERO_SLIDES.map((s, i) => ({ ...s, id: `seed-slide-${i}` })));
+  const [courses, setCourses] = useState<Course[]>(() => INITIAL_COURSES.map((c, i) => ({ ...c, id: `seed-course-${i}` })));
+  const [categories, setCategories] = useState<CourseCategory[]>(() => INITIAL_CATEGORIES.map((cat, i) => ({ ...cat, id: `seed-cat-${i}` })));
+  const [whyChooseItems, setWhyChooseItems] = useState<WhyChooseUsItem[]>(() => INITIAL_WHY_CHOOSE_US.map((item, i) => ({ ...item, id: `seed-why-${i}` })));
+  const [services, setServices] = useState<ServiceItem[]>(() => INITIAL_SERVICES.map((srv, i) => ({ ...srv, id: `seed-srv-${i}` })));
+  const [projects, setProjects] = useState<ProjectItem[]>(() => INITIAL_PROJECTS.map((p, i) => ({ ...p, id: `seed-proj-${i}` })));
+  const [resources, setResources] = useState<ResourceItem[]>(() => INITIAL_RESOURCES.map((r, i) => ({ ...r, id: `seed-res-${i}` })));
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => INITIAL_BLOG_POSTS.map((b, i) => ({ ...b, id: `seed-blog-${i}` })));
+  const [settings, setSettings] = useState<SiteSettings | null>(() => INITIAL_SITE_SETTINGS);
 
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [audience, setAudience] = useState<'all' | 'students' | 'professionals'>('all');

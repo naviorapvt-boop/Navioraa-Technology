@@ -8,12 +8,23 @@ interface ProjectDetailModalProps {
 }
 
 export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, onClose, onEnquire }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!project) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-fade-in">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fade-in"
+      onClick={onClose}
+    >
       <div
-        className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle"
+        className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Image Area */}
@@ -81,25 +92,31 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-4 border-t border-border-subtle bg-surface-subtle flex items-center justify-between gap-3">
-          <button
-            onClick={onClose}
-            className="h-11 px-5 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors"
-          >
-            Close
-          </button>
-
-          <button
-            onClick={() => {
-              onClose();
-              onEnquire(`Project Collaboration: ${project.title}`);
-            }}
-            className="h-11 px-6 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
-          >
-            <span>Discuss This Solution</span>
-            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-          </button>
+        {/* Footer Actions - Requirement 4 & 6: responsive layout with concise keyword labels */}
+        <div className="p-3.5 sm:p-4 border-t border-border-subtle bg-surface-subtle flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+          <div className="text-[11px] text-text-muted hidden sm:block">
+            <span>NAVIORAA Real-World Project Incubator</span>
+          </div>
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={onClose}
+              className="h-10 px-4 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors flex items-center justify-center text-slate-700"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onEnquire(`Project: ${project.title}`);
+              }}
+              className="h-10 px-4 rounded-xl bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] hover:from-[#0047E0] hover:to-[#008FE6] text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
+            >
+              <span>Enquire Project</span>
+              <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

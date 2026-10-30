@@ -66,6 +66,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onLearnMore, onE
               </span>
             )}
           </div>
+
+          {/* Green What we achieve highlight - Requirement 10 */}
+          {course.learningOutcomes && course.learningOutcomes[0] && (
+            <div className="mt-2.5 flex items-center gap-1.5 text-[11px] text-emerald-700 bg-emerald-50/90 px-2.5 py-1.5 rounded-lg border border-emerald-200/80">
+              <span className="material-symbols-outlined text-[15px] text-emerald-600 shrink-0">check_circle</span>
+              <span className="line-clamp-1 font-medium text-emerald-800">
+                <strong className="text-emerald-600 font-bold">What we achieve:</strong> {course.learningOutcomes[0]}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Meta Info: Duration & Projects */}

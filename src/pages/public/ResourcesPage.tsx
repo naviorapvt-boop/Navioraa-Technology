@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getResources, getBlogPosts } from '../../lib/data-service';
 import { ResourceItem, BlogPost } from '../../lib/types';
+import { INITIAL_RESOURCES, INITIAL_BLOG_POSTS } from '../../lib/seed-data';
 import { ResourcesSection } from '../../components/public/ResourcesSection';
 
 export const ResourcesPage: React.FC = () => {
-  const [resources, setResources] = useState<ResourceItem[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [resources, setResources] = useState<ResourceItem[]>(() => INITIAL_RESOURCES.map((r, i) => ({ ...r, id: `seed-res-${i}` })));
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => INITIAL_BLOG_POSTS.map((b, i) => ({ ...b, id: `seed-blog-${i}` })));
   const navigate = useNavigate();
 
   useEffect(() => {

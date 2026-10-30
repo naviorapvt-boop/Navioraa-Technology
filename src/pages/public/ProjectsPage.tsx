@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getProjects } from '../../lib/data-service';
 import { ProjectItem } from '../../lib/types';
+import { INITIAL_PROJECTS } from '../../lib/seed-data';
 import { ProjectsSection } from '../../components/public/ProjectsSection';
 import { ContactEnquirySection } from '../../components/public/ContactEnquirySection';
 
 export const ProjectsPage: React.FC = () => {
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>(() => INITIAL_PROJECTS.map((p, i) => ({ ...p, id: `seed-proj-${i}` })));
 
   useEffect(() => {
     getProjects(true).then(setProjects);

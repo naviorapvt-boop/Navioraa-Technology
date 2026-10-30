@@ -1,8 +1,9 @@
 /**
  * NAVIORAA Institute of Technology & R&D
  * Official Syllabi & Study Notes Repository
- * Provides rich downloadable curriculum modules and topic study notes.
+ * Provides rich downloadable curriculum modules and topic study notes in PDF.
  */
+import jsPDF from 'jspdf';
 
 export interface TopicNote {
   id: string;
@@ -36,7 +37,7 @@ export const TOPIC_NOTES: TopicNote[] = [
     category: 'Full Stack Development',
     level: 'Beginner to Advanced',
     duration: '16 Weeks (Hands-on)',
-    fileFormat: 'PDF / Text Guide',
+    fileFormat: 'Official PDF Syllabus',
     fileSize: '4.2 MB',
     description: 'Complete course curriculum and study notes covering Python 3, OOP, PostgreSQL schema design, Django REST Framework, React integration, and AWS cloud deployment.',
     summary: 'Master full-stack enterprise web development using modern Python, Django, PostgreSQL, and React. Includes 6 production-grade projects and CI/CD pipelines.',
@@ -115,7 +116,7 @@ export const TOPIC_NOTES: TopicNote[] = [
     category: 'Web Development',
     level: 'Beginner to Advanced',
     duration: '14 Weeks (Hands-on)',
-    fileFormat: 'PDF / Text Guide',
+    fileFormat: 'Official PDF Syllabus',
     fileSize: '3.6 MB',
     description: 'Modern full-stack JavaScript: MongoDB aggregation pipelines, Express.js microservices, React state systems, and Node.js asynchronous architecture.',
     summary: 'Build end-to-end JavaScript applications with MongoDB, Express, React, and Node.js. Master asynchronous programming, WebSockets, and cloud hosting.',
@@ -188,7 +189,7 @@ export const TOPIC_NOTES: TopicNote[] = [
     category: 'Artificial Intelligence',
     level: 'Intermediate',
     duration: '16 Weeks (Hands-on)',
-    fileFormat: 'PDF / Text Guide',
+    fileFormat: 'Official PDF Syllabus',
     fileSize: '5.1 MB',
     description: 'From statistical fundamentals and NumPy/Pandas pipelines to deep neural networks, transformer architectures, and applied LLM engineering.',
     summary: 'Comprehensive hands-on AI curriculum covering data preprocessing, supervised/unsupervised machine learning, PyTorch neural networks, computer vision, and generative AI.',
@@ -261,7 +262,7 @@ export const TOPIC_NOTES: TopicNote[] = [
     category: 'Data Analytics',
     level: 'Beginner to Intermediate',
     duration: '10 Weeks (Hands-on)',
-    fileFormat: 'PDF / Text Guide',
+    fileFormat: 'Official PDF Syllabus',
     fileSize: '3.4 MB',
     description: 'Master advanced SQL queries, Excel business modeling, Power BI interactive dashboard design, and introductory predictive analytics.',
     summary: 'Practical enterprise data analysis curriculum focused on solving business challenges with SQL, advanced spreadsheet modeling, DAX measures, and Power BI dashboards.',
@@ -321,7 +322,7 @@ export const TOPIC_NOTES: TopicNote[] = [
     category: 'Programming',
     level: 'All Levels',
     duration: 'Self-Paced / 8 Weeks',
-    fileFormat: 'PDF / Text Guide',
+    fileFormat: 'Official PDF Syllabus',
     fileSize: '3.8 MB',
     description: 'High-frequency algorithmic problem patterns, data structure diagrams, time complexity cheatsheets, and system design essentials.',
     summary: 'The comprehensive technical interview survival guide covering arrays, strings, two pointers, sliding window, trees, graphs, and dynamic programming.',
@@ -365,84 +366,267 @@ export const TOPIC_NOTES: TopicNote[] = [
 ];
 
 /**
- * Generates and downloads a clean, beautifully formatted course syllabus or study notes file.
+ * Generates and downloads a clean, beautifully formatted course syllabus or study notes PDF.
  */
 export function downloadSyllabusFile(note: TopicNote): void {
-  const separator = '='.repeat(70);
-  const subSeparator = '-'.repeat(70);
-
-  let content = '';
-  content += `${separator}\n`;
-  content += `NAVIORAA INSTITUTE OF TECHNOLOGY & R&D\n`;
-  content += `OFFICIAL CURRICULUM SYLLABUS & STUDY NOTES\n`;
-  content += `${separator}\n\n`;
-
-  content += `TITLE: ${note.title}\n`;
-  content += `CATEGORY: ${note.category}\n`;
-  content += `SKILL LEVEL: ${note.level}\n`;
-  content += `ESTIMATED DURATION: ${note.duration}\n`;
-  content += `INSTITUTE CONTACT: +91 9890187383 | naviora.pvt@gmail.com\n`;
-  content += `WEBSITE: https://navioraa.com\n\n`;
-
-  content += `${subSeparator}\n`;
-  content += `PROGRAM OVERVIEW\n`;
-  content += `${subSeparator}\n`;
-  content += `${note.description}\n\n`;
-  content += `Summary:\n${note.summary}\n\n`;
-
-  content += `${subSeparator}\n`;
-  content += `TECHNOLOGY STACK & TOOLS MASTERED\n`;
-  content += `${subSeparator}\n`;
-  content += note.toolsAndStack.map(t => `  • ${t}`).join('\n') + '\n\n';
-
-  content += `${subSeparator}\n`;
-  content += `PREREQUISITES\n`;
-  content += `${subSeparator}\n`;
-  content += note.prerequisites.map(p => `  • ${p}`).join('\n') + '\n\n';
-
-  content += `${subSeparator}\n`;
-  content += `DETAILED MODULE BREAKDOWN & PRACTICAL LABS\n`;
-  content += `${subSeparator}\n\n`;
-
-  note.modules.forEach(mod => {
-    content += `Module ${mod.moduleNumber}: ${mod.title} (${mod.duration})\n`;
-    content += `Key Topics Covered:\n`;
-    mod.topics.forEach(topic => {
-      content += `   - ${topic}\n`;
+  try {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: 'a4',
     });
-    content += `Hands-On Production Lab:\n`;
-    content += `   -> ${mod.practicalLab}\n\n`;
-  });
 
-  content += `${subSeparator}\n`;
-  content += `EXPECTED LEARNING OUTCOMES\n`;
-  content += `${subSeparator}\n`;
-  note.keyOutcomes.forEach(o => {
-    content += `  [✓] ${o}\n`;
-  });
-  content += '\n';
+    const pageWidth = doc.internal.pageSize.getWidth(); // 595.28 pt
+    const pageHeight = doc.internal.pageSize.getHeight(); // 841.89 pt
+    const margin = 40;
+    const contentWidth = pageWidth - margin * 2; // 515.28 pt
+    let y = margin;
 
-  content += `${subSeparator}\n`;
-  content += `CAREER OPPORTUNITIES & GRADUATE ROLES\n`;
-  content += `${subSeparator}\n`;
-  content += note.careerRoles.map(r => `  • ${r}`).join('\n') + '\n\n';
+    const drawPageHeader = () => {
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'normal');
+      doc.text('NAVIORAA INSTITUTE OF TECHNOLOGY & R&D | OFFICIAL SYLLABUS', margin, 24);
+      doc.text('+91 9890187383 | naviora.pvt@gmail.com', pageWidth - margin, 24, { align: 'right' });
+      doc.setDrawColor(226, 232, 240);
+      doc.line(margin, 28, pageWidth - margin, 28);
+    };
 
-  content += `${separator}\n`;
-  content += `HOW TO ENQUIRE OR ENROLL:\n`;
-  content += `Call or WhatsApp: +91 9890187383\n`;
-  content += `Official Email: naviora.pvt@gmail.com\n`;
-  content += `Campus Admissions: Mon - Sat: 9:00 AM - 7:00 PM IST\n`;
-  content += `© ${new Date().getFullYear()} NAVIORAA Institute of Technology & R&D. All rights reserved.\n`;
-  content += `${separator}\n`;
+    const checkPageBreak = (spaceNeeded: number) => {
+      if (y + spaceNeeded > pageHeight - 45) {
+        doc.addPage();
+        y = margin;
+        drawPageHeader();
+      }
+    };
 
-  // Trigger browser download via Blob
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `NAVIORAA_${note.slug.toUpperCase()}_SYLLABUS.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+    // First page top banner
+    doc.setFillColor(0, 82, 255); // #0052FF Brand Blue
+    doc.roundedRect(margin, y, contentWidth, 70, 8, 8, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text('NAVIORAA INSTITUTE OF TECHNOLOGY & R&D', margin + 16, y + 24);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('OFFICIAL CURRICULUM SYLLABUS & PRACTICAL STUDY GUIDE', margin + 16, y + 40);
+
+    doc.setFontSize(7.5);
+    doc.setTextColor(219, 234, 254);
+    doc.text('ISO-Aligned Pedagogy  ·  1-on-1 Code Reviews  ·  Production Capstones  ·  Industry Faculty', margin + 16, y + 55);
+
+    y += 88;
+
+    // Course Title & Metadata
+    doc.setTextColor(15, 23, 42);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    const titleLines = doc.splitTextToSize(note.title, contentWidth);
+    doc.text(titleLines, margin, y);
+    y += titleLines.length * 18 + 4;
+
+    // Metadata Badges Row
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 82, 255);
+    doc.text(`Category: ${note.category}   |   Level: ${note.level}   |   Duration: ${note.duration}`, margin, y);
+    y += 16;
+
+    // Contact info line
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Admissions & Faculty Helpdesk: +91 9890187383  ·  naviora.pvt@gmail.com  ·  navioraa.com', margin, y);
+    y += 12;
+
+    doc.setDrawColor(226, 232, 240);
+    doc.line(margin, y, margin + contentWidth, y);
+    y += 16;
+
+    // Program Overview
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(0, 82, 255);
+    doc.text('1. PROGRAM OVERVIEW & OBJECTIVES', margin, y);
+    y += 13;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(30, 41, 59);
+    const descLines = doc.splitTextToSize(note.description, contentWidth);
+    doc.text(descLines, margin, y);
+    y += descLines.length * 12 + 6;
+
+    const summaryLines = doc.splitTextToSize(note.summary, contentWidth);
+    doc.text(summaryLines, margin, y);
+    y += summaryLines.length * 12 + 14;
+
+    // Technologies & Tools
+    checkPageBreak(70);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(0, 82, 255);
+    doc.text('2. TECHNOLOGY STACK & TOOLS MASTERED', margin, y);
+    y += 13;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(30, 41, 59);
+    const techText = note.toolsAndStack.join('  •  ');
+    const techLines = doc.splitTextToSize(techText, contentWidth);
+    doc.text(techLines, margin, y);
+    y += techLines.length * 12 + 14;
+
+    // Prerequisites
+    checkPageBreak(70);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(0, 82, 255);
+    doc.text('3. PREREQUISITES & ELIGIBILITY', margin, y);
+    y += 13;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(30, 41, 59);
+    note.prerequisites.forEach((p) => {
+      checkPageBreak(18);
+      const pLines = doc.splitTextToSize(`• ${p}`, contentWidth - 10);
+      doc.text(pLines, margin + 5, y);
+      y += pLines.length * 12 + 2;
+    });
+    y += 10;
+
+    // Module Breakdown
+    checkPageBreak(90);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(0, 82, 255);
+    doc.text('4. INTENSIVE CURRICULUM MODULES & PRACTICAL LABS', margin, y);
+    y += 15;
+
+    note.modules.forEach((mod) => {
+      checkPageBreak(95);
+
+      doc.setFillColor(241, 245, 249);
+      doc.rect(margin, y - 9, contentWidth, 18, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text(`Module ${mod.moduleNumber}: ${mod.title} (${mod.duration})`, margin + 6, y + 4);
+      y += 17;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(51, 65, 85);
+      mod.topics.forEach((t) => {
+        checkPageBreak(16);
+        const tLines = doc.splitTextToSize(`- ${t}`, contentWidth - 16);
+        doc.text(tLines, margin + 12, y);
+        y += tLines.length * 11 + 2;
+      });
+
+      checkPageBreak(28);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(5, 150, 105);
+      doc.text('Hands-On Production Lab:', margin + 12, y + 2);
+      y += 11;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(30, 41, 59);
+      const labLines = doc.splitTextToSize(mod.practicalLab, contentWidth - 20);
+      doc.text(labLines, margin + 16, y);
+      y += labLines.length * 11 + 10;
+    });
+
+    // Learning Outcomes - Highlighted in Green per user instruction
+    checkPageBreak(90);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(5, 150, 105);
+    doc.text('5. WHAT YOU WILL ACHIEVE (LEARNING OUTCOMES)', margin, y);
+    y += 13;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(30, 41, 59);
+    note.keyOutcomes.forEach((out) => {
+      checkPageBreak(22);
+      const oLines = doc.splitTextToSize(`[✓] ${out}`, contentWidth - 10);
+      doc.text(oLines, margin + 5, y);
+      y += oLines.length * 12 + 3;
+    });
+    y += 10;
+
+    // Career Paths
+    checkPageBreak(60);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(0, 82, 255);
+    doc.text('6. CAREER OPPORTUNITIES & GRADUATE ROLES', margin, y);
+    y += 13;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(30, 41, 59);
+    const roleText = note.careerRoles.join('   ·   ');
+    const roleLines = doc.splitTextToSize(roleText, contentWidth);
+    doc.text(roleLines, margin, y);
+    y += roleLines.length * 12 + 14;
+
+    // Footer Info Box
+    checkPageBreak(65);
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y, contentWidth, 48, 6, 6, 'F');
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(margin, y, contentWidth, 48, 6, 6, 'D');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text('HOW TO ENROL OR SCHEDULE 1-ON-1 FACULTY CONSULTATION:', margin + 10, y + 15);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Call / WhatsApp: +91 9890187383   |   Email: naviora.pvt@gmail.com   |   Website: navioraa.com', margin + 10, y + 28);
+    doc.text(`© ${new Date().getFullYear()} NAVIORAA Institute of Technology & R&D. Verified Educational Document.`, margin + 10, y + 39);
+
+    const totalPages = doc.internal.pages.length - 1;
+    for (let p = 1; p <= totalPages; p++) {
+      doc.setPage(p);
+      doc.setFontSize(7.5);
+      doc.setTextColor(148, 163, 184);
+      doc.text(`Page ${p} of ${totalPages}`, pageWidth - margin, pageHeight - 16, { align: 'right' });
+    }
+
+    doc.save(`NAVIORAA_${note.slug.toUpperCase()}_SYLLABUS.pdf`);
+  } catch (err) {
+    console.warn('PDF generation fallback to text:', err);
+    const separator = '='.repeat(70);
+    let content = `${separator}
+NAVIORAA INSTITUTE OF TECHNOLOGY & R&D
+OFFICIAL SYLLABUS: ${note.title}
+Contact: +91 9890187383 | naviora.pvt@gmail.com
+${separator}
+
+`;
+    content += `DESCRIPTION:
+${note.description}
+
+`;
+    content += `MODULES:\n` + note.modules.map(m => `Module ${m.moduleNumber}: ${m.title}\n  Lab: ${m.practicalLab}`).join('\n\n') + '\n\n';
+    content += `WHAT YOU ACHIEVE:\n` + note.keyOutcomes.map(o => `[✓] ${o}`).join('\n') + '\n';
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `NAVIORAA_${note.slug.toUpperCase()}_SYLLABUS.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 }

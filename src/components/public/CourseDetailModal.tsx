@@ -11,6 +11,14 @@ interface CourseDetailModalProps {
 export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, onClose, onEnquire }) => {
   const [downloadNotice, setDownloadNotice] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!course) return null;
 
   const handleDownload = () => {
@@ -27,21 +35,24 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
     ) || TOPIC_NOTES[0];
 
     downloadSyllabusFile(note);
-    setDownloadNotice(`Downloaded "${course.title}" Syllabus!`);
+    setDownloadNotice(`Downloaded "${course.title}" PDF Syllabus!`);
     setTimeout(() => setDownloadNotice(null), 3000);
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-fade-in">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fade-in"
+      onClick={onClose}
+    >
       <div
-        className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle"
+        className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="relative p-6 bg-gradient-to-r from-primary to-primary-dark text-white">
+        <div className="relative p-5 sm:p-6 bg-gradient-to-r from-primary to-primary-dark text-white">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/25 hover:bg-black/40 text-white flex items-center justify-center transition-colors z-20"
             aria-label="Close modal"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
@@ -51,11 +62,11 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
             {course.category} · {course.skillLevel}
           </span>
 
-          <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-white leading-tight pr-8">
+          <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-white leading-tight pr-10">
             {course.title}
           </h2>
 
-          <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-blue-100">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-3 text-xs text-blue-100">
             <span className="flex items-center gap-1 font-medium">
               <span className="material-symbols-outlined text-[16px]">schedule</span>
               {course.duration}
@@ -146,19 +157,20 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
             </div>
           )}
 
-          {/* Learning Outcomes */}
+          {/* Learning Outcomes - User requirement 10: green color */}
           {course.learningOutcomes && course.learningOutcomes.length > 0 && (
             <div>
-              <h3 className="font-heading font-bold text-sm text-primary uppercase tracking-wider mb-3">
-                What You Will Achieve
+              <h3 className="font-heading font-bold text-sm text-emerald-600 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-emerald-600 text-[18px]">verified</span>
+                <span>What You Will Achieve</span>
               </h3>
               <div className="grid grid-cols-1 gap-2">
                 {course.learningOutcomes.map((outcome, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 text-xs text-on-surface">
-                    <span className="material-symbols-outlined text-secondary text-[18px] flex-shrink-0 mt-0.5">
+                  <div key={idx} className="flex items-start gap-2 text-xs text-on-surface">
+                    <span className="material-symbols-outlined text-emerald-600 text-[18px] flex-shrink-0 mt-0.5">
                       check_circle
                     </span>
-                    <span>{outcome}</span>
+                    <span className="leading-relaxed">{outcome}</span>
                   </div>
                 ))}
               </div>
@@ -166,32 +178,35 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
           )}
         </div>
 
-        {/* Modal Footer Actions */}
-        <div className="p-4 border-t border-border-subtle bg-surface-subtle flex flex-col sm:flex-row items-center justify-between gap-3">
+        {/* Modal Footer Actions - Requirement 4: flexible on mobile, keyword buttons */}
+        <div className="p-3.5 sm:p-4 border-t border-border-subtle bg-surface-subtle flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
           <button
             type="button"
             onClick={handleDownload}
-            className="w-full sm:w-auto h-11 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs"
+            className="w-full sm:w-auto h-10 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs"
+            title="Download official PDF syllabus"
           >
             <span className="material-symbols-outlined text-[16px]">download</span>
-            <span>Download Full Syllabus</span>
+            <span>Download PDF</span>
           </button>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
             <button
+              type="button"
               onClick={onClose}
-              className="flex-1 sm:flex-none h-11 px-4 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors"
+              className="h-10 px-4 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors flex items-center justify-center"
             >
               Close
             </button>
             <button
+              type="button"
               onClick={() => {
                 onClose();
                 onEnquire(course.title);
               }}
-              className="flex-1 sm:flex-none h-11 px-5 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+              className="h-10 px-4 rounded-xl bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] hover:from-[#0047E0] hover:to-[#008FE6] text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
             >
-              <span>Enquire for Admission</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <span>Enquire</span>
+              <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
             </button>
           </div>
         </div>

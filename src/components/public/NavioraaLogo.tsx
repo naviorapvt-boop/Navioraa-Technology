@@ -47,7 +47,7 @@ export const NavioraaLogo: React.FC<NavioraaLogoProps> = ({
   const markId = React.useId().replace(/:/g, '');
 
   return (
-    <div className={`inline-flex items-center gap-2.5 sm:gap-3 select-none ${className}`}>
+    <div className={`inline-flex items-center gap-1.5 sm:gap-3 select-none ${className}`}>
       {/* 3D Folded Ribbon "N" Mark */}
       <svg
         width={markSize.w}

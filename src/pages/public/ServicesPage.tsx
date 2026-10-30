@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getServices } from '../../lib/data-service';
 import { ServiceItem } from '../../lib/types';
+import { INITIAL_SERVICES } from '../../lib/seed-data';
 import { ServicesSection } from '../../components/public/ServicesSection';
 import { ContactEnquirySection } from '../../components/public/ContactEnquirySection';
 
 export const ServicesPage: React.FC = () => {
-  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [services, setServices] = useState<ServiceItem[]>(() => INITIAL_SERVICES.map((s, i) => ({ ...s, id: `seed-srv-${i}` })));
 
   useEffect(() => {
     getServices(true).then(setServices);

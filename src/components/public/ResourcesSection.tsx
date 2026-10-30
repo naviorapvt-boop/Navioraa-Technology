@@ -172,26 +172,15 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({
                     <span className="text-[10px] uppercase font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-border-subtle">
                       {res.category}
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handlePreviewSyllabus(res)}
-                        className="h-8 px-2.5 rounded-lg border border-border-medium hover:bg-slate-100 text-slate-700 font-semibold text-[11px] flex items-center gap-1 transition-all"
-                        title="View complete syllabus modules on screen"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">visibility</span>
-                        <span>Preview</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDownloadResource(res)}
-                        className="h-8 px-3 rounded-lg bg-gradient-to-r from-[#0052FF] to-[#0066FF] hover:from-[#0047E0] hover:to-[#0057E0] text-white font-semibold text-[11px] flex items-center gap-1 active:scale-95 transition-all shadow-2xs"
-                        title="Download syllabus file immediately"
-                      >
-                        <span>Download</span>
-                        <span className="material-symbols-outlined text-[14px]">download</span>
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadResource(res)}
+                      className="h-8 px-3.5 rounded-lg bg-gradient-to-r from-[#0052FF] to-[#0066FF] hover:from-[#0047E0] hover:to-[#0057E0] text-white font-bold text-[11px] flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs"
+                      title="Download official PDF syllabus"
+                    >
+                      <span className="material-symbols-outlined text-[15px]">download</span>
+                      <span>Download PDF</span>
+                    </button>
                   </div>
                 </div>
               );

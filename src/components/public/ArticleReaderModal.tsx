@@ -8,6 +8,14 @@ interface ArticleReaderModalProps {
 }
 
 export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ post, onClose, onEnquire }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!post) return null;
 
   // Render markdown-like sections cleanly
@@ -58,9 +66,12 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ post, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fade-in">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fade-in"
+      onClick={onClose}
+    >
       <div
-        className="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle"
+        className="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Banner */}
@@ -140,16 +151,16 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ post, on
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="p-4 border-t border-border-subtle bg-surface-subtle flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-[11px] text-text-muted">
-            <span>Published by NAVIORAA IT Training & Project Labs</span>
+        {/* Modal Footer - Requirement 4 & 9: mobile-flexible layout with concise keyword labels */}
+        <div className="p-3.5 sm:p-4 border-t border-border-subtle bg-surface-subtle flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+          <div className="text-[11px] text-text-muted hidden sm:block">
+            <span>Curriculum Knowledge · NAVIORAA IT Training Labs</span>
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 sm:flex-none h-10 px-4 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors"
+              className="h-10 px-4 rounded-xl border border-border-medium text-xs font-semibold hover:bg-slate-100 transition-colors flex items-center justify-center text-slate-700"
             >
               Close
             </button>
@@ -157,11 +168,11 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({ post, on
               type="button"
               onClick={() => {
                 onClose();
-                onEnquire(post.title);
+                onEnquire(`Mentorship: ${post.title}`);
               }}
-              className="flex-1 sm:flex-none h-10 px-5 rounded-xl bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all"
+              className="h-10 px-4 rounded-xl bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] hover:from-[#0047E0] hover:to-[#008FE6] text-white text-xs font-bold flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
             >
-              <span>Enquire for Topic Mentorship</span>
+              <span>Enquire Mentorship</span>
               <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
             </button>
           </div>

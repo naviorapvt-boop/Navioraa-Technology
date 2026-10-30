@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getCourses, getCategories } from '../../lib/data-service';
 import { Course, CourseCategory } from '../../lib/types';
+import { INITIAL_COURSES, INITIAL_CATEGORIES } from '../../lib/seed-data';
 import { CourseCategoryFilter } from '../../components/public/CourseCategoryFilter';
 import { CourseCard } from '../../components/public/CourseCard';
 import { CourseDetailModal } from '../../components/public/CourseDetailModal';
 
 export const CoursesPage: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [categories, setCategories] = useState<CourseCategory[]>([]);
+  const [courses, setCourses] = useState<Course[]>(() => INITIAL_COURSES.map((c, i) => ({ ...c, id: `seed-course-${i}` })));
+  const [categories, setCategories] = useState<CourseCategory[]>(() => INITIAL_CATEGORIES.map((cat, i) => ({ ...cat, id: `seed-cat-${i}` })));
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [audience, setAudience] = useState<'all' | 'students' | 'professionals'>('all');
   const [searchQuery, setSearchQuery] = useState('');

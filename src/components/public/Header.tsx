@@ -47,13 +47,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-border-subtle shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
-        <div className="max-w-7xl mx-auto h-16 sm:h-18 px-3 sm:px-6 flex items-center justify-between gap-3 lg:gap-4">
+        <div className="max-w-7xl mx-auto h-16 sm:h-18 px-2.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Mobile Menu Toggle & Brand Vector Logo */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-shrink">
             <button
               type="button"
               aria-label="Open Navigation Menu"
-              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-subtle active:scale-95 transition-all"
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-subtle active:scale-95 transition-all flex-shrink-0"
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="material-symbols-outlined text-[24px]">menu</span>
@@ -63,10 +63,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
             <Link
               to="/"
               onClick={(e) => handleNavClick('/', e)}
-              className="flex items-center group flex-shrink-0 py-1"
+              className="flex items-center group flex-shrink py-1 min-w-0"
               title="NAVIORAA - Innovation Beyond Tomorrow"
             >
-              <NavioraaLogo variant="light" size="md" />
+              <NavioraaLogo variant="light" size="sm" showTagline={false} className="sm:hidden" />
+              <NavioraaLogo variant="light" size="md" showTagline={true} className="hidden sm:inline-flex" />
             </Link>
           </div>
 
@@ -234,11 +235,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
           </nav>
 
           {/* Right Action CTA Buttons: Clean, clearly visible, styled with logo palette */}
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
             <button
               type="button"
               onClick={(e) => handleNavClick('/courses', e)}
-              className="hidden sm:inline-flex h-9 px-3.5 lg:px-4 rounded-full bg-slate-50 hover:bg-[#0052FF]/10 text-[#0052FF] border border-[#0052FF]/25 text-xs font-bold items-center justify-center transition-all active:scale-95 shadow-2xs hover:border-[#0052FF]/40 whitespace-nowrap"
+              className="hidden md:inline-flex h-9 px-3.5 lg:px-4 rounded-full bg-slate-50 hover:bg-[#0052FF]/10 text-[#0052FF] border border-[#0052FF]/25 text-xs font-bold items-center justify-center transition-all active:scale-95 shadow-2xs hover:border-[#0052FF]/40 whitespace-nowrap"
             >
               Explore Courses
             </button>
@@ -246,10 +247,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
             <button
               type="button"
               onClick={handleEnquireClick}
-              className="h-9 px-3.5 sm:px-4 rounded-full bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] hover:from-[#0047E0] hover:to-[#008FE6] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm shadow-blue-500/25 hover:shadow-md hover:shadow-blue-500/35 transition-all active:scale-95 whitespace-nowrap"
+              className="h-8 sm:h-9 px-2.5 sm:px-4 rounded-full bg-gradient-to-r from-[#0052FF] via-[#0066FF] to-[#00A3FF] hover:from-[#0047E0] hover:to-[#008FE6] text-white text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1 sm:gap-1.5 shadow-sm shadow-blue-500/25 hover:shadow-md hover:shadow-blue-500/35 transition-all active:scale-95 whitespace-nowrap flex-shrink-0"
+              aria-label="Enquire Now"
             >
               <span>Enquire Now</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <span className="material-symbols-outlined text-[13px] sm:text-[16px]">arrow_forward</span>
             </button>
           </div>
         </div>

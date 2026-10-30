@@ -58,6 +58,19 @@ export function sanitizeForFirestore<T extends Record<string, any>>(obj: T): T {
   return result as T;
 }
 
+/**
+ * Wraps a Firestore query in a 2500ms race timeout to guarantee
+ * instantaneous response and eliminate page stalls even on slow/offline connections.
+ */
+function fetchWithTimeout<T>(fetchPromise: Promise<T>, timeoutMs = 2500): Promise<T> {
+  return Promise.race([
+    fetchPromise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('Firestore request timed out')), timeoutMs)
+    )
+  ]);
+}
+
 // ==================== SEED / BOOTSTRAP ====================
 
 export async function seedInitialDatabaseIfEmpty(): Promise<{ seeded: boolean; message: string }> {
@@ -143,7 +156,7 @@ export async function getHeroSlides(publishedOnly = true): Promise<HeroSlide[]> 
     const q = publishedOnly 
       ? query(colRef, where('published', '==', true))
       : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_HERO_SLIDES.map((s, i) => ({ ...s, id: `seed-slide-${i}` }));
     }
@@ -191,7 +204,7 @@ export async function getCourses(publishedOnly = true): Promise<Course[]> {
     const q = publishedOnly 
       ? query(colRef, where('published', '==', true))
       : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_COURSES.map((c, i) => ({ ...c, id: `seed-course-${i}` }));
     }
@@ -254,7 +267,7 @@ export async function getCategories(activeOnly = true): Promise<CourseCategory[]
   try {
     const colRef = collection(db, 'courseCategories');
     const q = activeOnly ? query(colRef, where('active', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && activeOnly) {
       return INITIAL_CATEGORIES.map((c, i) => ({ ...c, id: `seed-cat-${i}` }));
     }
@@ -297,7 +310,7 @@ export async function getWhyChooseUs(publishedOnly = true): Promise<WhyChooseUsI
   try {
     const colRef = collection(db, 'whyChooseUs');
     const q = publishedOnly ? query(colRef, where('published', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_WHY_CHOOSE_US.map((item, i) => ({ ...item, id: `seed-why-${i}` }));
     }
@@ -340,7 +353,7 @@ export async function getServices(publishedOnly = true): Promise<ServiceItem[]> 
   try {
     const colRef = collection(db, 'services');
     const q = publishedOnly ? query(colRef, where('published', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_SERVICES.map((s, i) => ({ ...s, id: `seed-serv-${i}` }));
     }
@@ -385,7 +398,7 @@ export async function getProjects(publishedOnly = true): Promise<ProjectItem[]> 
   try {
     const colRef = collection(db, 'projects');
     const q = publishedOnly ? query(colRef, where('published', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_PROJECTS.map((p, i) => ({ ...p, id: `seed-proj-${i}` }));
     }
@@ -430,7 +443,7 @@ export async function getTeamMembers(publishedOnly = true): Promise<TeamMember[]
   try {
     const colRef = collection(db, 'teamMembers');
     const q = publishedOnly ? query(colRef, where('published', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_TEAM_MEMBERS.map((m, i) => ({ ...m, id: `seed-team-${i}` }));
     }
@@ -475,7 +488,7 @@ export async function getResources(publishedOnly = true): Promise<ResourceItem[]
   try {
     const colRef = collection(db, 'resources');
     const q = publishedOnly ? query(colRef, where('published', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_RESOURCES.map((r, i) => ({ ...r, id: `seed-res-${i}` }));
     }
@@ -518,7 +531,7 @@ export async function getBlogPosts(publishedOnly = true): Promise<BlogPost[]> {
   try {
     const colRef = collection(db, 'blogPosts');
     const q = publishedOnly ? query(colRef, where('published', '==', true)) : colRef;
-    const snap = await getDocs(q);
+    const snap = await fetchWithTimeout(getDocs(q), 2000);
     if (snap.empty && publishedOnly) {
       return INITIAL_BLOG_POSTS.map((b, i) => ({ ...b, id: `seed-blog-${i}` }));
     }
@@ -579,7 +592,7 @@ export async function deleteBlogPost(id: string): Promise<void> {
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   try {
-    const snap = await getDoc(doc(db, 'siteSettings', 'general'));
+    const snap = await fetchWithTimeout(getDoc(doc(db, 'siteSettings', 'general')), 2000);
     if (snap.exists()) {
       const data = snap.data() as SiteSettings;
       const contactPhone =
