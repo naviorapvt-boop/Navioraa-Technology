@@ -173,8 +173,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Rahul Sharma"
-                  className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
+                  className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
                 />
               </div>
 
@@ -189,8 +188,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="rahul@example.com"
-                    className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
+                    className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
                   />
                 </div>
 
@@ -204,8 +202,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 98901 87383"
-                    className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
+                    className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
                   />
                 </div>
               </div>
@@ -221,7 +218,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                   onChange={(e) => setProgramOrService(e.target.value)}
                   className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
                 >
-                  <option value="" disabled>Select a domain program or service</option>
+                  <option value="" disabled>Select program or service</option>
                   {programOrService && ![
                     "Python Full Stack Development",
                     "Python Programming Essentials",
@@ -259,8 +256,7 @@ export const ContactEnquirySection: React.FC<ContactEnquirySectionProps> = ({
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Tell us about your educational background, learning goals, or preferred project focus..."
-                  className="w-full p-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface placeholder:text-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs resize-none"
+                  className="w-full p-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs resize-none"
                 />
               </div>
 

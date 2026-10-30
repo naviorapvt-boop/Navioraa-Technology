@@ -48,37 +48,48 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({ course, on
         className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-border-subtle relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
-        <div className="relative p-5 sm:p-6 bg-gradient-to-r from-primary to-primary-dark text-white">
+        {/* Modal Header with Course-Specific Image Banner */}
+        <div className="relative min-h-[170px] sm:min-h-[200px] w-full overflow-hidden flex flex-col justify-end p-5 sm:p-6 text-white bg-slate-950">
+          {course.thumbnail && (
+            <img
+              src={course.thumbnail}
+              alt={course.title}
+              className="absolute inset-0 w-full h-full object-cover opacity-40 scale-105"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/35" />
+
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/25 hover:bg-black/40 text-white flex items-center justify-center transition-colors z-20"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 hover:bg-black/85 border border-white/20 text-white flex items-center justify-center transition-colors z-20"
             aria-label="Close modal"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
 
-          <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-200 bg-white/10 px-2.5 py-0.5 rounded-full mb-2">
-            {course.category} · {course.skillLevel}
-          </span>
+          <div className="relative z-10">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#00E5FF] bg-black/50 backdrop-blur-xs border border-white/10 px-2.5 py-0.5 rounded-full mb-2">
+              {course.category} · {course.skillLevel}
+            </span>
 
-          <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-white leading-tight pr-10">
-            {course.title}
-          </h2>
+            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-white leading-tight pr-10">
+              {course.title}
+            </h2>
 
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-3 text-xs text-blue-100">
-            <span className="flex items-center gap-1 font-medium">
-              <span className="material-symbols-outlined text-[16px]">schedule</span>
-              {course.duration}
-            </span>
-            <span className="flex items-center gap-1 font-medium">
-              <span className="material-symbols-outlined text-[16px]">terminal</span>
-              {course.projectsCount || 4} Production Projects
-            </span>
-            <span className="flex items-center gap-1 font-medium text-amber-300">
-              <span className="material-symbols-outlined text-[16px]">star</span>
-              {course.rating || 4.9} / 5.0
-            </span>
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mt-3 text-xs text-slate-200">
+              <span className="flex items-center gap-1 font-medium bg-black/40 backdrop-blur-xs border border-white/10 px-2.5 py-1 rounded-lg">
+                <span className="material-symbols-outlined text-[15px] text-[#00E5FF]">schedule</span>
+                {course.duration}
+              </span>
+              <span className="flex items-center gap-1 font-medium bg-black/40 backdrop-blur-xs border border-white/10 px-2.5 py-1 rounded-lg">
+                <span className="material-symbols-outlined text-[15px] text-blue-400">terminal</span>
+                {course.projectsCount || 4} Production Projects
+              </span>
+              <span className="flex items-center gap-1 font-medium text-amber-300 bg-black/40 backdrop-blur-xs border border-white/10 px-2.5 py-1 rounded-lg">
+                <span className="material-symbols-outlined text-[15px]">star</span>
+                {course.rating || 4.9} / 5.0
+              </span>
+            </div>
           </div>
         </div>
 

@@ -562,6 +562,124 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
   });
 });
 
+// ==================== ADMIN AUTHENTICATION API ====================
+const PRIMARY_ADMIN_CREDENTIALS: Record<string, { pass: string; name: string; role: string }> = {
+  'shubhammahadik3228@gmail.com': {
+    pass: 'Harvey@2026',
+    name: 'Shubham Mahadik',
+    role: 'owner',
+  },
+  'naviora.pvt@gmail.com': {
+    pass: 'Harvey@2026',
+    name: 'Navioraa Executive',
+    role: 'owner',
+  },
+  'admin@navioraa.com': {
+    pass: 'Harvey@2026',
+    name: 'Master Admin',
+    role: 'owner',
+  },
+};
+
+// Admin Login Endpoint: Fallback & direct authentication provider
+app.post('/api/admin/login', (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ success: false, error: 'Email and password are required.' });
+  }
+
+  const cleanEmail = String(email).trim().toLowerCase();
+  const cleanPass = String(password).trim();
+
+  const record = PRIMARY_ADMIN_CREDENTIALS[cleanEmail];
+  if (record && record.pass === cleanPass) {
+    console.log(`[Admin Auth] Successful administrator login for: ${cleanEmail} (${record.name})`);
+    return res.json({
+      success: true,
+      user: {
+        uid: `admin_${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
+        email: cleanEmail,
+        displayName: record.name,
+        role: record.role,
+        photoURL: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAa_WSW8m4TWYjK86YTPjBEJw81ncR7hMWmutBNBrs_edazprH7gJ4AvsCoYPhs1XURNDk8BEqWhdJJRuhMxy-STstF8j-U6F429qxEb6L2GcjhkHp-MXiK2rVyiL1YRzZIqpl-NUVHBJinwHxnvZWJyVvRUGbB-n4sk7pKrTLLaw5H65iFU9SeniqfnXyPWAojTAplMKscGMI6MIvItz5L9qtLktxLRWv9u8urbJcoQ-oUQBCnEYZyZQ',
+        token: `adm_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      },
+    });
+  }
+
+  console.warn(`[Admin Auth] Failed administrator login attempt for: ${cleanEmail}`);
+  return res.status(401).json({
+    success: false,
+    error: 'Invalid administrator email or password. Please verify credentials.',
+  });
+});
+
+// Admin Forgot Password / Verification Endpoint
+app.post('/api/admin/forgot-password', async (req: Request, res: Response) => {
+  const { email } = req.body;
+  if (!email || typeof email !== 'string') {
+    return res.status(400).json({ success: false, error: 'Administrator email is required.' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const record = PRIMARY_ADMIN_CREDENTIALS[cleanEmail];
+
+  if (!record) {
+    return res.status(404).json({
+      success: false,
+      error: `The email "${cleanEmail}" is not recognized as a registered NAVIORAA administrator.`,
+    });
+  }
+
+  const resetSubject = `[NAVIORAA Security] Administrator Credentials & Password Verification`;
+  const resetHtml = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #0f172a; line-height: 1.5;">
+      <div style="border-bottom: 2px solid #0052FF; padding-bottom: 16px; margin-bottom: 20px;">
+        <h2 style="color: #0052FF; margin: 0; font-size: 20px; font-weight: 800;">NAVIORAA Administrator Security Verification</h2>
+        <p style="color: #475569; font-size: 12px; margin: 4px 0 0 0;">Password Recovery Request for ${record.name}</p>
+      </div>
+
+      <p style="font-size: 13px; color: #334155;">Hello <strong>${record.name}</strong>,</p>
+      <p style="font-size: 13px; color: #334155;">A password verification request was initiated for your administrator account.</p>
+
+      <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px; margin: 20px 0; font-size: 13px;">
+        <p style="margin: 0 0 8px 0;"><strong>Administrator Account:</strong> <span style="font-family: monospace;">${cleanEmail}</span></p>
+        <p style="margin: 0 0 8px 0;"><strong>Current Access Key:</strong> <span style="font-family: monospace; font-weight: bold; background-color: #EEF2F6; padding: 2px 6px; border-radius: 4px;">${record.pass}</span></p>
+        <p style="margin: 0;"><strong>Assigned Role:</strong> <span style="color: #0052FF; font-weight: bold; text-transform: uppercase;">${record.role}</span></p>
+      </div>
+
+      <p style="font-size: 12px; color: #64748b;">You can use these credentials to log in at your administration portal anytime:</p>
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="https://navioraa.com/admin/login" style="background-color: #0052FF; color: #ffffff; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-block;">
+          Open Admin Login Portal
+        </a>
+      </div>
+
+      <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid #E2E8F0; font-size: 11px; color: #64748B;">
+        <p style="margin: 0;">If you did not request this verification, please contact naviora.pvt@gmail.com immediately.</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const delivery = await sendNotificationEmail(resetSubject, resetHtml, {
+      plainText: `NAVIORAA Admin Password Verification:\nEmail: ${cleanEmail}\nPassword: ${record.pass}\nRole: ${record.role}`,
+    });
+
+    console.log(`[Admin Password Reset] Verification sent to ${cleanEmail}:`, delivery);
+    return res.json({
+      success: true,
+      message: `Password verification instructions have been dispatched to ${cleanEmail}. Check your inbox!`,
+    });
+  } catch (err) {
+    console.error('Password reset dispatch error:', err);
+    return res.json({
+      success: true,
+      message: `Password verification instructions processed. Please check ${cleanEmail}.`,
+    });
+  }
+});
+
 // ==================== VITE MIDDLEWARE / STATIC & SPA REFRESH FALLBACK ====================
 async function startServer() {
   const distPath = path.resolve(__dirname, 'dist');

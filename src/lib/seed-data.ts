@@ -166,7 +166,7 @@ export const INITIAL_COURSES: Omit<Course, 'id'>[] = [
     slug: 'python-programming',
     shortDescription: 'From algorithmic fundamentals and OOP to advanced automation scripts, web scraping, and API integrations.',
     fullDescription: 'Designed for ambitious learners and practicing engineers who need rock-solid programming mastery. Starting from algorithmic foundations, memory management, and data structures (trees, graphs, hash maps, queues), the curriculum progresses through idiomatic object-oriented design patterns, decorators, generators, asynchronous programming with AsyncIO, system process automation bots, web scraping pipelines with BeautifulSoup and Playwright, and automated unit testing with pytest to write clean, maintainable, production-ready code.',
-    thumbnail: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1000&auto=format&fit=crop&q=80',
     category: 'Programming',
     technologies: ['Python 3', 'Data Structures', 'OOP', 'AsyncIO', 'Automation'],
     skillLevel: 'Beginner',
@@ -205,7 +205,7 @@ export const INITIAL_COURSES: Omit<Course, 'id'>[] = [
     slug: 'web-development-mern',
     shortDescription: 'Build asynchronous real-time web applications, modern single-page apps, and scalable microservices with full JS stack.',
     fullDescription: 'Become a high-caliber JavaScript full-stack engineer. Master React 19, TypeScript, Node.js, Express, MongoDB, WebSocket real-time streams, state management with Redux/Zustand, and cloud deployment on Vercel and Render.',
-    thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1000&auto=format&fit=crop&q=80',
     category: 'Full Stack Development',
     technologies: ['MongoDB', 'Express', 'React.js', 'Node.js', 'TypeScript', 'WebSockets'],
     skillLevel: 'Intermediate',
@@ -244,7 +244,7 @@ export const INITIAL_COURSES: Omit<Course, 'id'>[] = [
     slug: 'ai-and-machine-learning',
     shortDescription: 'Gain practical expertise in deep learning, neural networks, natural language processing, and production AI pipelines.',
     fullDescription: 'A practical, math-grounded dive into artificial intelligence. Master machine learning workflows with Scikit-Learn, deep learning architectures with PyTorch and TensorFlow, computer vision, NLP, and modern LLM application development using vector databases.',
-    thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1000&auto=format&fit=crop&q=80',
     category: 'Artificial Intelligence',
     technologies: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-Learn', 'Transformers', 'Vector DBs'],
     skillLevel: 'Advanced',
@@ -283,7 +283,7 @@ export const INITIAL_COURSES: Omit<Course, 'id'>[] = [
     slug: 'data-analytics',
     shortDescription: 'Extract actionable business intelligence from complex databases through SQL pipelines, automated models, and BI dashboards.',
     fullDescription: 'Transform raw data into strategic business leverage. Master advanced SQL queries, Power BI interactive dashboard design, Tableau analytics, Python data manipulation with Pandas & NumPy, and automated reporting pipelines.',
-    thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1000&auto=format&fit=crop&q=80',
     category: 'Data Analytics',
     technologies: ['Power BI', 'SQL Server', 'Python', 'Tableau', 'Excel Adv', 'Pandas'],
     skillLevel: 'All Skill Levels',
@@ -322,7 +322,7 @@ export const INITIAL_COURSES: Omit<Course, 'id'>[] = [
     slug: 'java-cloud-architecture',
     shortDescription: 'Construct high-availability enterprise backend systems with Spring Boot, containerized microservices, and AWS infrastructure.',
     fullDescription: 'Enterprise software development at scale. Master modern Java 17/21, Spring Boot 3, Hibernate/JPA, microservices architecture, Apache Kafka message queuing, Redis caching, Docker, and Kubernetes deployment.',
-    thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1000&auto=format&fit=crop&q=80',
     category: 'Programming',
     technologies: ['Java 21', 'Spring Boot 3', 'Microservices', 'Docker', 'Kafka', 'AWS'],
     skillLevel: 'Intermediate',
@@ -353,6 +353,84 @@ export const INITIAL_COURSES: Omit<Course, 'id'>[] = [
     displayOrder: 6,
     seoTitle: 'Java Cloud Architecture Training | NAVIORAA',
     seoDescription: 'Master enterprise Java, Spring Boot, microservices, and cloud systems with NAVIORAA mentors.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'Cloud DevOps & Kubernetes Engineering',
+    slug: 'cloud-devops-kubernetes',
+    shortDescription: 'Master modern CI/CD pipelines, container orchestration with Kubernetes, Docker, Terraform, and AWS cloud infrastructure.',
+    fullDescription: 'Become an indispensable site reliability and DevOps engineer. Learn infrastructure as code (IaC) with Terraform, container virtualization with Docker, multi-cluster management with Kubernetes, monitoring with Prometheus/Grafana, and automated GitHub Actions workflows.',
+    thumbnail: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=1000&auto=format&fit=crop&q=80',
+    category: 'Web Development',
+    technologies: ['Docker', 'Kubernetes', 'AWS', 'Terraform', 'CI/CD', 'Linux'],
+    skillLevel: 'Intermediate',
+    duration: '12 Weeks',
+    rating: 4.9,
+    projectsCount: 4,
+    syllabus: [
+      {
+        title: 'Module 1: Linux Systems & Container Foundations',
+        topics: ['Linux kernel namespaces & bash scripting', 'Docker build optimization & multi-stage images', 'Networking & volumes', 'Container security']
+      },
+      {
+        title: 'Module 2: Kubernetes Orchestration',
+        topics: ['Pods, Deployments & Services', 'Ingress controllers & Helm charts', 'ConfigMaps & Secrets', 'Auto-scaling & self-healing']
+      },
+      {
+        title: 'Module 3: Terraform & Cloud Infrastructure',
+        topics: ['Infrastructure as Code (IaC)', 'AWS VPC & EKS provisioning', 'CI/CD with GitHub Actions', 'Prometheus & Grafana monitoring']
+      }
+    ],
+    learningOutcomes: [
+      'Deploy and orchestrate high-availability Kubernetes clusters',
+      'Automate cloud infrastructure with declarative Terraform code',
+      'Implement zero-downtime CI/CD deployment workflows'
+    ],
+    featured: true,
+    published: true,
+    displayOrder: 7,
+    seoTitle: 'DevOps & Kubernetes Engineering | NAVIORAA',
+    seoDescription: 'Master Docker, Kubernetes, AWS, and CI/CD with hands-on cloud labs at NAVIORAA.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'Cross-Platform Mobile App Engineering (Flutter)',
+    slug: 'mobile-app-engineering-flutter',
+    shortDescription: 'Build beautiful, natively compiled applications for iOS and Android using Flutter, Dart, Riverpod, and cloud backends.',
+    fullDescription: 'Architect fluid 60fps cross-platform mobile experiences. Master Dart 3, Flutter UI widgets, state management with Riverpod, offline SQLite persistence, REST/GraphQL integration, push notifications, and App Store / Google Play deployment.',
+    thumbnail: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1000&auto=format&fit=crop&q=80',
+    category: 'Programming',
+    technologies: ['Flutter', 'Dart', 'iOS', 'Android', 'Riverpod', 'Firebase'],
+    skillLevel: 'Beginner',
+    duration: '12 Weeks',
+    rating: 4.8,
+    projectsCount: 4,
+    syllabus: [
+      {
+        title: 'Module 1: Dart 3 & Reactive UI Principles',
+        topics: ['Dart OOP & asynchronous streams', 'Flutter widget tree & responsive layouts', 'Custom animations & gesture handling', 'Material 3 & Cupertino design']
+      },
+      {
+        title: 'Module 2: State Management & Architecture',
+        topics: ['Riverpod state providers', 'Clean architecture & repository pattern', 'Local SQLite & Hive storage', 'RESTful API integration & error handling']
+      },
+      {
+        title: 'Module 3: Native Features & App Publishing',
+        topics: ['Camera, GPS & biometric sensors', 'Push notifications with FCM', 'App performance profiling', 'Google Play & Apple App Store release']
+      }
+    ],
+    learningOutcomes: [
+      'Publish production-ready mobile apps to Google Play and Apple App Store',
+      'Implement smooth reactive state management with Riverpod',
+      'Connect mobile clients with cloud backends and real-time push events'
+    ],
+    featured: false,
+    published: true,
+    displayOrder: 8,
+    seoTitle: 'Mobile App Engineering with Flutter | NAVIORAA',
+    seoDescription: 'Build native iOS and Android apps from scratch with Flutter and Dart at NAVIORAA.',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
