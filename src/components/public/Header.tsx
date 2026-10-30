@@ -66,8 +66,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEnquiry }) => {
               className="flex items-center group flex-shrink py-1 min-w-0"
               title="NAVIORAA - Innovation Beyond Tomorrow"
             >
-              <NavioraaLogo variant="light" size="sm" showTagline={false} className="sm:hidden" />
-              <NavioraaLogo variant="light" size="md" showTagline={true} className="hidden sm:inline-flex" />
+              <NavioraaLogo variant="light" size="responsive" />
             </Link>
           </div>
 

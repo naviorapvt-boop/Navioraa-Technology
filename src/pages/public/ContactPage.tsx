@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getSiteSettings } from '../../lib/data-service';
 import { SiteSettings } from '../../lib/types';
+import { INITIAL_SITE_SETTINGS } from '../../lib/seed-data';
 import { ContactEnquirySection } from '../../components/public/ContactEnquirySection';
 
 export const ContactPage: React.FC = () => {
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [settings, setSettings] = useState<SiteSettings | null>(() => INITIAL_SITE_SETTINGS);
 
   useEffect(() => {
     getSiteSettings().then(setSettings);

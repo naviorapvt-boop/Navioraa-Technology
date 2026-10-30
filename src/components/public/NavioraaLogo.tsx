@@ -3,7 +3,7 @@ import React from 'react';
 interface NavioraaLogoProps {
   variant?: 'light' | 'dark';
   showTagline?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'responsive';
   className?: string;
 }
 
@@ -19,16 +19,18 @@ interface NavioraaLogoProps {
 export const NavioraaLogo: React.FC<NavioraaLogoProps> = ({
   variant = 'light',
   showTagline = true,
-  size = 'md',
+  size = 'responsive',
   className = '',
 }) => {
   const isDark = variant === 'dark';
 
-  // Mark dimensions based on size
-  const markSize = {
-    sm: { w: 32, h: 32 },
-    md: { w: 38, h: 38 },
-    lg: { w: 46, h: 46 },
+  // Mark sizing
+  const isResponsive = size === 'responsive';
+  const markDimensions = {
+    sm: { w: 32, h: 32, cls: 'w-8 h-8' },
+    md: { w: 38, h: 38, cls: 'w-[38px] h-[38px]' },
+    lg: { w: 46, h: 46, cls: 'w-[46px] h-[46px]' },
+    responsive: { w: 38, h: 38, cls: 'w-8 h-8 sm:w-[38px] sm:h-[38px]' },
   }[size];
 
   // Font sizing based on size
@@ -36,26 +38,28 @@ export const NavioraaLogo: React.FC<NavioraaLogoProps> = ({
     sm: 'text-lg tracking-wider',
     md: 'text-xl sm:text-[22px] tracking-wider',
     lg: 'text-2xl sm:text-3xl tracking-wider',
+    responsive: 'text-[17px] sm:text-xl tracking-wider',
   }[size];
 
   const taglineSizeClass = {
     sm: 'text-[7.5px] tracking-[0.22em]',
     md: 'text-[8.5px] sm:text-[9.5px] tracking-[0.24em]',
     lg: 'text-[10px] sm:text-[11px] tracking-[0.26em]',
+    responsive: 'hidden sm:flex text-[8.5px] sm:text-[9.5px] tracking-[0.24em]',
   }[size];
 
   const markId = React.useId().replace(/:/g, '');
 
   return (
-    <div className={`inline-flex items-center gap-1.5 sm:gap-3 select-none ${className}`}>
+    <div className={`inline-flex items-center gap-1.5 sm:gap-2.5 select-none ${className}`}>
       {/* 3D Folded Ribbon "N" Mark */}
       <svg
-        width={markSize.w}
-        height={markSize.h}
+        width={markDimensions.w}
+        height={markDimensions.h}
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="flex-shrink-0 drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+        className={`flex-shrink-0 drop-shadow-sm transition-transform duration-200 group-hover:scale-105 ${markDimensions.cls}`}
         aria-hidden="true"
       >
         <defs>

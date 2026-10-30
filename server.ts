@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -547,8 +548,12 @@ app.post('/api/enquiries', async (req: Request, res: Response) => {
   });
 });
 
-// ==================== VITE MIDDLEWARE / STATIC ====================
+// ==================== VITE MIDDLEWARE / STATIC & SPA REFRESH FALLBACK ====================
 async function startServer() {
+  const distPath = path.resolve(__dirname, 'dist');
+  const distIndexHtml = path.resolve(distPath, 'index.html');
+  const rootIndexHtml = path.resolve(__dirname, 'index.html');
+
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
@@ -556,10 +561,45 @@ async function startServer() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
+
+    // Guaranteed SPA Catch-All for Development:
+    // When refreshing any route (e.g. /courses, /about, /projects, /resources, /contact, /admin/*),
+    // transform and return index.html so React Router takes over with zero 404s.
+    app.use('*', async (req: Request, res: Response, next) => {
+      const url = req.originalUrl;
+      // Never intercept API routes
+      if (url.startsWith('/api/')) {
+        return res.status(404).json({ error: 'Endpoint not found' });
+      }
+
+      try {
+        let template = await fs.promises.readFile(rootIndexHtml, 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e) {
+        vite.ssrFixStacktrace(e as Error);
+        next(e);
+      }
+    });
   } else {
-    app.use(express.static(path.resolve(__dirname, 'dist')));
+    // Production Mode:
+    // Serve static assets from dist
+    if (fs.existsSync(distPath)) {
+      app.use(express.static(distPath));
+    } else {
+      app.use(express.static(__dirname));
+    }
+
+    // SPA Catch-All for Production
     app.get('*', (req: Request, res: Response) => {
-      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+      if (req.originalUrl.startsWith('/api/')) {
+        return res.status(404).json({ error: 'Endpoint not found' });
+      }
+
+      if (fs.existsSync(distIndexHtml)) {
+        return res.sendFile(distIndexHtml);
+      }
+      return res.sendFile(rootIndexHtml);
     });
   }
 

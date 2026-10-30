@@ -40,9 +40,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchAdminProfile = async (user: User) => {
     try {
-      // Check admins doc
+      // Check admins doc with 2500ms timeout guard
       const adminDocRef = doc(db, 'admins', user.uid);
-      const adminSnap = await getDoc(adminDocRef);
+      const adminSnap = await Promise.race([
+        getDoc(adminDocRef),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Firestore getDoc timeout')), 2500))
+      ]);
 
       const isKnownBootstrapEmail = user.email ? BOOTSTRAP_ADMIN_EMAILS.includes(user.email.toLowerCase()) : false;
 

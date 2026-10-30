@@ -690,9 +690,12 @@ export async function createEnquiry(enquiry: Omit<Enquiry, 'id' | 'status' | 'cr
   const cleanRecord = sanitizeForFirestore(record);
 
   try {
-    await setDoc(docRef, cleanRecord);
+    await fetchWithTimeout(setDoc(docRef, cleanRecord), 3000);
   } catch (error) {
-    handleFirestoreError(error, OperationType.CREATE, `enquiries/${docRef.id}`);
+    console.warn('Firestore database write notice for enquiry:', error);
+    if (!emailDelivered) {
+      handleFirestoreError(error, OperationType.CREATE, `enquiries/${docRef.id}`);
+    }
   }
 
   const userFeedbackMessage = emailDelivered
