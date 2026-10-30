@@ -31,7 +31,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const BOOTSTRAP_ADMIN_EMAILS = ['naviora.pvt@gmail.com', 'shubham@navioraa.com', 'admin@navioraa.com'];
+const BOOTSTRAP_ADMIN_EMAILS = [
+  'shubhammahadik3228@gmail.com',
+  'naviora.pvt@gmail.com',
+  'shubham@navioraa.com',
+  'admin@navioraa.com'
+];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -47,24 +52,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Firestore getDoc timeout')), 2500))
       ]);
 
-      const isKnownBootstrapEmail = user.email ? BOOTSTRAP_ADMIN_EMAILS.includes(user.email.toLowerCase()) : false;
+      const emailLower = user.email ? user.email.toLowerCase() : '';
+      const isKnownBootstrapEmail = emailLower ? BOOTSTRAP_ADMIN_EMAILS.includes(emailLower) : false;
 
       if (adminSnap.exists()) {
         const data = adminSnap.data();
         const role = (data.role as Role) || (isKnownBootstrapEmail ? 'owner' : 'admin');
+        const displayName = data.displayName || (emailLower.includes('shubham') ? 'Shubham Mahadik' : user.displayName || user.email?.split('@')[0] || 'Admin');
         setAdminProfile({
           uid: user.uid,
           email: user.email || '',
-          displayName: user.displayName || user.email?.split('@')[0] || 'Admin',
+          displayName,
           role,
           photoURL: user.photoURL || undefined,
         });
       } else if (isKnownBootstrapEmail) {
         // Automatically link bootstrap admin email
+        const displayName = emailLower.includes('shubham') ? 'Shubham Mahadik' : (user.displayName || 'Super Admin');
         const autoProfile: AdminUser = {
           uid: user.uid,
           email: user.email || '',
-          displayName: user.displayName || 'Owner (Shubham)',
+          displayName,
           role: 'owner',
           photoURL: user.photoURL || undefined,
           createdAt: new Date().toISOString(),
@@ -72,6 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           await setDoc(adminDocRef, {
             email: user.email,
+            displayName,
             role: 'owner',
             createdAt: new Date().toISOString(),
           });
@@ -85,10 +94,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err) {
       console.warn('Error reading admin profile:', err);
       if (user.email && BOOTSTRAP_ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+        const displayName = user.email.toLowerCase().includes('shubham') ? 'Shubham Mahadik' : 'Super Admin';
         setAdminProfile({
           uid: user.uid,
           email: user.email,
-          displayName: user.displayName || 'Owner',
+          displayName,
           role: 'owner',
         });
       } else {
@@ -121,9 +131,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const loginWithEmail = async (email: string, pass: string) => {
-    const res = await signInWithEmailAndPassword(auth, email, pass);
-    if (res.user) {
-      await fetchAdminProfile(res.user);
+    const cleanEmail = email.trim().toLowerCase();
+    try {
+      const res = await signInWithEmailAndPassword(auth, cleanEmail, pass);
+      if (res.user) {
+        await fetchAdminProfile(res.user);
+      }
+    } catch (err: any) {
+      // If user does not yet exist in Firebase Auth for this project and matches bootstrap super admin
+      if (
+        (err?.code === 'auth/user-not-found' ||
+         err?.code === 'auth/invalid-credential' ||
+         err?.code === 'auth/invalid-login-credentials') &&
+        (BOOTSTRAP_ADMIN_EMAILS.includes(cleanEmail) || cleanEmail === 'shubhammahadik3228@gmail.com')
+      ) {
+        try {
+          const createRes = await createUserWithEmailAndPassword(auth, cleanEmail, pass);
+          if (createRes.user) {
+            await fetchAdminProfile(createRes.user);
+            return;
+          }
+        } catch (createErr) {
+          console.warn('Auto create bootstrap user error:', createErr);
+        }
+      }
+      throw err;
     }
   };
 
@@ -133,7 +165,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const sendPasswordReset = async (email: string) => {
-    await sendPasswordResetEmail(auth, email);
+    await sendPasswordResetEmail(auth, email.trim().toLowerCase());
   };
 
   const refreshAdminProfile = async () => {

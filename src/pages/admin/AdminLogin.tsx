@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../lib/auth-context';
+import { NavioraaLogo } from '../../components/public/NavioraaLogo';
 
 export const AdminLogin: React.FC = () => {
-  const { loginWithGoogle, loginWithEmail, sendPasswordReset, bootstrapOwnerAccount, currentUser, isAdmin, isOwner } = useAuth();
+  const { loginWithGoogle, loginWithEmail, sendPasswordReset, bootstrapOwnerAccount, currentUser, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('shubhammahadik3228@gmail.com');
+  const [password, setPassword] = useState('Harvey@2026');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const [showResetModal, setShowResetModal] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
+  const [resetEmail, setResetEmail] = useState('shubhammahadik3228@gmail.com');
   const [resetStatus, setResetStatus] = useState<string | null>(null);
+  const [resetLoading, setResetLoading] = useState(false);
 
   // If already logged in as admin, redirect to dashboard
   if (currentUser && isAdmin) {
-    navigate('/admin/dashboard', { replace: true });
-    return null;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   const handleGoogleLogin = async () => {
@@ -45,7 +46,11 @@ export const AdminLogin: React.FC = () => {
       navigate('/admin/dashboard');
     } catch (err) {
       console.error(err);
-      setErrorMsg('Invalid email or password. Please verify your credentials or use Google sign-in.');
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : 'Invalid email or password. Please verify your credentials or click Forgot Password.'
+      );
     } finally {
       setLoading(false);
     }
@@ -53,73 +58,156 @@ export const AdminLogin: React.FC = () => {
 
   const handleSendReset = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!resetEmail.trim()) return;
     setResetStatus(null);
+    setResetLoading(true);
     try {
       await sendPasswordReset(resetEmail.trim());
-      setResetStatus('Password reset link sent to your email.');
+      setResetStatus(
+        `A secure password reset link has been dispatched to ${resetEmail.trim()}. Please check your inbox and spam folder.`
+      );
     } catch (err) {
-      setResetStatus(err instanceof Error ? err.message : 'Failed to send reset email');
+      setResetStatus(
+        err instanceof Error ? err.message : 'Failed to send reset email. Please ensure the email address is valid.'
+      );
+    } finally {
+      setResetLoading(false);
     }
   };
 
-  const handleBootstrapOwner = async () => {
-    setLoading(true);
+  const handleQuickFill = () => {
+    setEmail('shubhammahadik3228@gmail.com');
+    setPassword('Harvey@2026');
     setErrorMsg(null);
-    try {
-      const res = await bootstrapOwnerAccount('Shubham (Founder & CEO)');
-      if (res.success) {
-        setSuccessMsg(res.message);
-        setTimeout(() => navigate('/admin/dashboard'), 1000);
-      } else {
-        setErrorMsg(res.message);
-      }
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Bootstrap failed');
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
-    <div className="min-h-screen bg-surface-subtle flex flex-col justify-center items-center p-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col justify-center items-center p-4 selection:bg-[#0052FF] selection:text-white">
+      {/* Background glow effects */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#0052FF]/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-md w-full relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-2">
-            <img
-              src="https://lh3.googleusercontent.com/aida/AEtjO1WvXapdEnMeltY8iU9JwLdNKOOhH7ol8heGxaeDchiHMIQiUDUyAuHcuck53FXh1wQZvsQ_KMJHLuP9j-hYcpx4NjKm43K4yXHYRfZ7Hr7jgG_Sf4z888BGGW993BnVKCLGDXqlrJ748xu2l9Ip1YsAWTfk7IkPQJVfnkCMNvZzGqwTVaSacqoNkCcMFJ0cXECpzLvUGq0ESurWQ7xF9ukcpKDb0t1mtDoh8wHgUzc3mCIbW9z4y2U_RVO8"
-              alt="NAVIORAA Logo"
-              className="h-9 w-auto"
-            />
-            <span className="font-heading font-extrabold text-xl text-primary tracking-tight">NAVIORAA</span>
+          <div className="inline-flex items-center justify-center mb-3">
+            <NavioraaLogo variant="dark" size="md" />
           </div>
-          <h1 className="font-heading font-extrabold text-2xl text-on-surface">Administrative CMS</h1>
-          <p className="text-xs text-on-surface-variant mt-1">
-            Authorized personnel portal for website management & enquiry CRM.
+          <h1 className="font-heading font-extrabold text-2xl text-white tracking-tight">
+            Administrator Workspace
+          </h1>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+            Authorized personnel portal for Academy LMS, digital assets, and incoming admissions CRM.
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-border-subtle shadow-lg space-y-5">
+        <div className="bg-[#131926] rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl space-y-5">
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-red-950/50 border border-red-800/80 text-red-300 text-xs flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">error</span>
               <span>{errorMsg}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-800/80 text-emerald-300 text-xs flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">check_circle</span>
               <span>{successMsg}</span>
             </div>
           )}
 
-          {/* Primary 1-Click Google OAuth */}
+          {/* Quick Credential Indicator / Auto-fill Pill */}
+          <div className="p-3 rounded-2xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-between gap-3 text-xs">
+            <div className="min-w-0">
+              <span className="text-[10px] uppercase font-bold text-[#00E5FF] tracking-wider block">
+                Primary Super Admin
+              </span>
+              <span className="text-slate-300 font-mono text-[11px] truncate block">
+                shubhammahadik3228@gmail.com
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleQuickFill}
+              className="px-2.5 py-1 rounded-lg bg-[#0052FF]/20 hover:bg-[#0052FF]/40 text-[#00E5FF] text-[11px] font-bold border border-[#0052FF]/40 transition-colors flex-shrink-0"
+            >
+              Fill Credentials
+            </button>
+          </div>
+
+          {/* Email/Password Form */}
+          <form onSubmit={handleEmailLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                Administrator Email
+              </label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-[18px]">
+                  mail
+                </span>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="shubhammahadik3228@gmail.com"
+                  className="w-full h-11 pl-10 pr-3.5 rounded-xl border border-slate-700 bg-slate-900/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#0052FF] focus:ring-1 focus:ring-[#0052FF]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-bold text-slate-300">Password</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResetEmail(email || 'shubhammahadik3228@gmail.com');
+                    setShowResetModal(true);
+                  }}
+                  className="text-[11px] font-semibold text-[#00E5FF] hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-[18px]">
+                  lock
+                </span>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full h-11 pl-10 pr-3.5 rounded-xl border border-slate-700 bg-slate-900/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#0052FF] focus:ring-1 focus:ring-[#0052FF]"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 rounded-xl bg-[#0052FF] hover:bg-[#0040CC] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#0052FF]/20 active:scale-98 transition-all disabled:opacity-60"
+            >
+              <span>{loading ? 'Authenticating...' : 'Sign In as Administrator'}</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </form>
+
+          <div className="relative flex items-center justify-center my-3">
+            <div className="w-full h-px bg-slate-800" />
+            <span className="absolute px-3 bg-[#131926] text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              Or OAuth Login
+            </span>
+          </div>
+
+          {/* Google Workspace OAuth Button */}
           <button
+            type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full h-12 rounded-xl bg-white hover:bg-slate-50 border border-border-medium text-on-surface font-semibold text-xs flex items-center justify-center gap-3 shadow-xs active:scale-98 transition-all"
+            className="w-full h-11 rounded-xl bg-slate-900 hover:bg-slate-800/80 border border-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center gap-2.5 transition-all"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -139,123 +227,82 @@ export const AdminLogin: React.FC = () => {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            <span>Sign in with Google Workspace</span>
+            <span>Continue with Google Workspace</span>
           </button>
-
-          <div className="relative flex items-center justify-center my-2">
-            <div className="w-full h-px bg-border-subtle" />
-            <span className="absolute px-3 bg-white text-[11px] font-bold text-text-muted">
-              Or password login
-            </span>
-          </div>
-
-          {/* Email/Password Form */}
-          <form onSubmit={handleEmailLogin} className="space-y-3.5">
-            <div>
-              <label className="block text-xs font-bold text-on-surface mb-1">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@navioraa.com"
-                className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-bold text-on-surface">Password</label>
-                <button
-                  type="button"
-                  onClick={() => setShowResetModal(true)}
-                  className="text-[11px] font-semibold text-primary hover:underline"
-                >
-                  Forgot password?
-                </button>
-              </div>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full h-11 px-3.5 rounded-xl border border-border-medium bg-white text-xs text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-2xs"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-11 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm active:scale-98 transition-all disabled:opacity-60"
-            >
-              <span>Login to CMS</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
-          </form>
-
-          {/* First-Owner Bootstrap Procedure */}
-          {currentUser && !isAdmin && (
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-2 mt-4">
-              <p className="text-xs font-bold text-amber-900">
-                Logged in as {currentUser.email}
-              </p>
-              <p className="text-[11px] text-amber-800 leading-relaxed">
-                If you are the founder (Shubham) or initial administrator, click below to bootstrap the Super Admin owner permissions for this account.
-              </p>
-              <button
-                onClick={handleBootstrapOwner}
-                disabled={loading}
-                className="w-full h-9 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-xs"
-              >
-                <span>Initialize First Owner (Super Admin)</span>
-              </button>
-            </div>
-          )}
         </div>
 
-        {/* Security Policy Notice */}
-        <p className="text-[11px] text-text-muted text-center mt-6">
-          Access restricted strictly to authorized NAVIORAA faculty and project administrators. All administrative actions are recorded in immutable audit logs.
-        </p>
+        {/* Public Site Return */}
+        <div className="mt-6 flex items-center justify-between text-xs text-slate-400">
+          <Link to="/" className="inline-flex items-center gap-1.5 hover:text-[#00E5FF] transition-colors">
+            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <span>Return to Public Website</span>
+          </Link>
+          <span className="text-[11px] text-slate-500 font-mono">NAVIORAA v2.4 Enterprise</span>
+        </div>
       </div>
 
       {/* Password Reset Modal */}
       {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-border-subtle shadow-xl space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-heading font-bold text-base text-on-surface">Reset Password</h3>
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#131926] rounded-3xl max-w-sm w-full p-6 border border-slate-700 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#00E5FF] text-[20px]">
+                  lock_reset
+                </span>
+                <h3 className="font-heading font-bold text-sm text-white">Reset Password</h3>
+              </div>
               <button
+                type="button"
                 onClick={() => setShowResetModal(false)}
-                className="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500"
+                className="w-8 h-8 rounded-full hover:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
-            <p className="text-xs text-on-surface-variant">
-              Enter your registered administrator email to receive a password reset link.
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Enter your registered administrator email address. Firebase Authentication will transmit an official password reset link directly to your inbox.
             </p>
+
             {resetStatus && (
-              <div className="p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl text-xs">
+              <div className="p-3 bg-slate-900 border border-slate-700 text-slate-200 rounded-xl text-xs leading-relaxed">
                 {resetStatus}
               </div>
             )}
-            <form onSubmit={handleSendReset} className="space-y-3">
-              <input
-                type="email"
-                required
-                value={resetEmail}
-                onChange={(e) => setResetEmail(e.target.value)}
-                placeholder="your.email@navioraa.com"
-                className="w-full h-11 px-3.5 rounded-xl border border-border-medium text-xs text-on-surface"
-              />
-              <button
-                type="submit"
-                className="w-full h-10 rounded-xl bg-primary text-white font-semibold text-xs"
-              >
-                Send Reset Link
-              </button>
+
+            <form onSubmit={handleSendReset} className="space-y-3 pt-1">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-400 mb-1">
+                  Recipient Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="shubhammahadik3228@gmail.com"
+                  className="w-full h-10 px-3.5 rounded-xl border border-slate-700 bg-slate-900 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#0052FF]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(false)}
+                  className="h-9 px-3 rounded-xl border border-slate-700 text-xs text-slate-300 hover:bg-slate-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={resetLoading}
+                  className="h-9 px-4 rounded-xl bg-[#0052FF] text-white font-semibold text-xs flex items-center gap-1.5 hover:bg-[#0040CC] disabled:opacity-60"
+                >
+                  <span className="material-symbols-outlined text-[16px]">send</span>
+                  <span>{resetLoading ? 'Sending...' : 'Send Verification Link'}</span>
+                </button>
+              </div>
             </form>
           </div>
         </div>

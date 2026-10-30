@@ -572,23 +572,28 @@ async function startServer() {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
-      appType: 'spa',
+      appType: 'custom',
     });
     app.use(vite.middlewares);
 
     // Guaranteed SPA Catch-All for Development:
-    // When refreshing any route (e.g. /courses, /about, /projects, /resources, /contact, /admin/*),
-    // transform and return index.html so React Router takes over with zero 404s.
-    app.use('*', async (req: Request, res: Response, next) => {
-      const url = req.originalUrl;
+    // When refreshing any route (e.g. /courses, /about, /projects, /resources, /contact, /admin, /admin/dashboard),
+    // serve index.html with Vite transformation so React Router takes over with zero 404s.
+    app.get('*', async (req: Request, res: Response, next) => {
+      const url = req.originalUrl.split('?')[0];
       // Never intercept API routes
       if (url.startsWith('/api/')) {
         return res.status(404).json({ error: 'Endpoint not found' });
       }
 
+      // Let missing static assets with extensions fall through to 404 rather than returning HTML
+      if (path.extname(url) && !url.endsWith('.html')) {
+        return next();
+      }
+
       try {
         let template = await fs.promises.readFile(rootIndexHtml, 'utf-8');
-        template = await vite.transformIndexHtml(url, template);
+        template = await vite.transformIndexHtml(req.originalUrl, template);
         res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
       } catch (e) {
         vite.ssrFixStacktrace(e as Error);
@@ -599,15 +604,20 @@ async function startServer() {
     // Production Mode:
     // Serve static assets from dist
     if (fs.existsSync(distPath)) {
-      app.use(express.static(distPath));
+      app.use(express.static(distPath, { index: false }));
     } else {
-      app.use(express.static(__dirname));
+      app.use(express.static(__dirname, { index: false }));
     }
 
     // SPA Catch-All for Production
-    app.get('*', (req: Request, res: Response) => {
-      if (req.originalUrl.startsWith('/api/')) {
+    app.get('*', (req: Request, res: Response, next) => {
+      const url = req.originalUrl.split('?')[0];
+      if (url.startsWith('/api/')) {
         return res.status(404).json({ error: 'Endpoint not found' });
+      }
+
+      if (path.extname(url) && !url.endsWith('.html')) {
+        return next();
       }
 
       if (fs.existsSync(distIndexHtml)) {
